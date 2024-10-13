@@ -1,4 +1,4 @@
-# Coffee (Change later)
+# BridgePath Academy
 
 ## Description
 This is a React, TypeScript, and Next.js web application built as part of a computer science course project. The application is designed to showcase modern web development practices, including server-side rendering, API integration, and type safety, all deployed via Vercel.
