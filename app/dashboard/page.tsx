@@ -1,7 +1,8 @@
 // import { cookies } from "next/headers";
 // import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import ECommerce from "@/components/Dashboard/E-commerce";
+// import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import HomeLayout from "@/components/Layouts/HomeLayout";
 import { AppProvider } from "@/context/AppContext";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -14,7 +15,7 @@ export default async function Dashboard() {
   return (
     <AppProvider>
       <DefaultLayout>
-        <ECommerce />
+        <HomeLayout />
       </DefaultLayout>
     </AppProvider>
   );
