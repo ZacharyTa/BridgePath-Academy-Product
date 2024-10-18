@@ -18,32 +18,61 @@ export function OnboardingQuestionnaire() {
   }
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow-md">
-      <h2 className="mb-4 text-2xl font-semibold">Onboarding Questionnaire</h2>
+    <div className="rounded-lg bg-white p-6 shadow-md dark:bg-boxdark">
+      <h2 className="mb-4 text-2xl font-semibold dark:text-white">
+        Onboarding Questionnaire
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name">Your Name</Label>
-            <Input id="name" placeholder="Enter your name" required />
+            <Label htmlFor="name" className="dark:text-white">
+              Your Name
+            </Label>
+            <Input
+              id="name"
+              placeholder="Enter your name"
+              required
+              className="dark:bg-gray-800 dark:text-white"
+            />
           </div>
           <div>
-            <Label>Your Experience Level</Label>
+            <Label className="dark:text-white">Your Experience Level</Label>
             <RadioGroup defaultValue="beginner">
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="beginner" id="beginner" />
-                <Label htmlFor="beginner">Beginner</Label>
+                <RadioGroupItem
+                  value="beginner"
+                  id="beginner"
+                  className="dark:bg-gray-800 dark:text-white"
+                />
+                <Label htmlFor="beginner" className="dark:text-white">
+                  Beginner
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="intermediate" id="intermediate" />
-                <Label htmlFor="intermediate">Intermediate</Label>
+                <RadioGroupItem
+                  value="intermediate"
+                  id="intermediate"
+                  className="dark:bg-gray-800 dark:text-white"
+                />
+                <Label htmlFor="intermediate" className="dark:text-white">
+                  Intermediate
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="advanced" id="advanced" />
-                <Label htmlFor="advanced">Advanced</Label>
+                <RadioGroupItem
+                  value="advanced"
+                  id="advanced"
+                  className="dark:bg-gray-800 dark:text-white"
+                />
+                <Label htmlFor="advanced" className="dark:text-white">
+                  Advanced
+                </Label>
               </div>
             </RadioGroup>
           </div>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="dark:bg-gray-800 dark:text-white">
+            Submit
+          </Button>
         </div>
       </form>
     </div>
