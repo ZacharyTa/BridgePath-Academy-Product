@@ -5,7 +5,8 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { AppProvider } from "@/context/AppContext";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
-import { RecommendedLearningPath } from "@/components/RecommendedLearningPath";
+// import { RecommendedLearningPath } from "@/components/RecommendedLearningPath";
+import { CoursePlanPageComponent } from "@/components/course-plan-page";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
@@ -15,7 +16,7 @@ export default async function RecommendedLearningPathPage() {
   return (
     <AppProvider>
       <DefaultLayout>
-        <RecommendedLearningPath />
+        <CoursePlanPageComponent />
       </DefaultLayout>
     </AppProvider>
   );
