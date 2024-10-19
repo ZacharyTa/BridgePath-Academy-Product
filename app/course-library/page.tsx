@@ -6,6 +6,7 @@ import { AppProvider } from "@/context/AppContext";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 import { CourseLibrary } from "@/components/CourseLibrary";
+import CourseCard from "@/components/Cards/CourseCard";
 
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
@@ -16,6 +17,7 @@ export default async function CourseLibraryPage() {
     <AppProvider>
       <DefaultLayout>
         <CourseLibrary />
+        <CourseCard />
       </DefaultLayout>
     </AppProvider>
   );
