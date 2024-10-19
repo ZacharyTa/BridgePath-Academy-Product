@@ -74,8 +74,8 @@ const Header = (props: {
           </Link>
         </div>
 
-        <div className="hidden sm:block">
-          {/* <form action="https://formbold.com/s/unique_form_id" method="POST">
+        <div className="hidden w-full sm:block">
+          <form action="https://formbold.com/s/unique_form_id" method="POST">
             <div className="relative">
               <button className="absolute left-0 top-1/2 -translate-y-1/2">
                 <svg
@@ -103,11 +103,11 @@ const Header = (props: {
 
               <input
                 type="text"
-                placeholder="Type to search..."
+                placeholder="What are you learning today?"
                 className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125"
               />
             </div>
-          </form> */}
+          </form>
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
