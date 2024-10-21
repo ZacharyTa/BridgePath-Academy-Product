@@ -78,7 +78,7 @@ export function CoursePlanPageComponent() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 dark:bg-boxdark dark:text-bodydark">
+    <div className="container mx-auto bg-white px-4 py-8 dark:bg-boxdark dark:text-bodydark">
       <CourseTitleHeader
         title={currentCourse.title}
         progress={currentCourse.progress}
@@ -87,7 +87,7 @@ export function CoursePlanPageComponent() {
 
       <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
-          <Card className="dark:bg-boxdark dark:text-bodydark">
+          <Card className="dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <CardContent className="p-6">
               <Tabs defaultValue="video" className="w-full">
                 <TabsList className="dark:bg-boxdark dark:text-bodydark">
@@ -137,12 +137,10 @@ export function CoursePlanPageComponent() {
             </CardContent>
           </Card>
 
-          <Card className="mt-8 dark:bg-boxdark dark:text-bodydark">
-            <CardContent className="p-6">
-              <QuizContainer
-                lessonId={currentCourse.lessons[currentLessonIndex].id}
-              />
-            </CardContent>
+          <Card className="mt-8 dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
+            <QuizContainer
+              lessonId={currentCourse.lessons[currentLessonIndex].id}
+            />
           </Card>
         </div>
 

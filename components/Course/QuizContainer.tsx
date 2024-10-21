@@ -55,7 +55,10 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <Card>
+    <Card className="relative">
+      {showFeedback && selectedAnswer === currentQuestion.correctAnswer && (
+        <div className="pointer-events-none absolute inset-0 bg-green-100 opacity-30 dark:bg-green-900"></div>
+      )}
       <CardHeader>
         <CardTitle>Take this Quiz</CardTitle>
       </CardHeader>
@@ -72,39 +75,19 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
             <Button
               key={index}
               variant={selectedAnswer === index ? "default" : "outline"}
-              className="w-full justify-start p-2"
-              onClick={() => handleAnswerSelect(index)}
-              style={
+              className={`w-full justify-start p-2 ${
                 selectedAnswer === index
-                  ? {
-                      border: "2px solid #3B82F6",
-                      boxShadow: "0 0 8px #3B82F6",
-                      backgroundColor: "#E0F2FE", // lighter background for selected state
-                    }
-                  : undefined
-              }
-              onMouseOver={(e) => {
-                Object.assign(e.currentTarget.style, {
-                  backgroundColor: "#3B82F6",
-                  cursor: "pointer",
-                });
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "";
-                e.currentTarget.style.cursor = "";
-              }}
+                  ? "text-gray-800 border-2 border-blue-500 bg-slate-200 dark:bg-boxdark"
+                  : ""
+              } hover:bg-slate-200 hover:dark:bg-boxdark`}
+              onClick={() => handleAnswerSelect(index)}
             >
               <span
-                style={{
-                  display: "inline-block",
-                  width: "1.5rem",
-                  height: "1.5rem",
-                  marginRight: "1rem",
-                  borderRadius: "50%",
-                  border: "2px solid #3B82F6",
-                  backgroundColor:
-                    selectedAnswer === index ? "#3B82F6" : "transparent",
-                }}
+                className={`mr-4 inline-block h-6 w-6 rounded-full border-2 ${
+                  selectedAnswer === index
+                    ? "border-blue-500 bg-blue-500"
+                    : "border-blue-500"
+                }`}
               ></span>
               {option}
             </Button>
@@ -113,30 +96,18 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
         {!showFeedback && (
           <Button
             onClick={handleSubmit}
-            className="mt-4 w-full py-2"
+            className={`mt-4 w-full py-2 ${
+              selectedAnswer === null
+                ? "cursor-not-allowed bg-neutral"
+                : "bg-blue-500 hover:bg-blue-600"
+            } rounded-lg font-medium text-white transition-all duration-300 ease-in-out`}
             disabled={selectedAnswer === null}
-            style={{
-              backgroundColor: selectedAnswer === null ? "#A0AEC0" : "#3B82F6",
-              fontSize: "1.1rem",
-              padding: "0.75rem",
-              color: "#FFF",
-              borderRadius: "0.5rem",
-              transition: "all 0.3s ease",
-            }}
-            onMouseOver={(e) => {
-              Object.assign(e.currentTarget.style, {
-                boxShadow: "0 0 10px #2563EB",
-              });
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.boxShadow = "";
-            }}
           >
             Submit Answer
           </Button>
         )}
         {showFeedback && (
-          <div className="mt-4">
+          <div className="relative z-10 mt-4">
             <p
               className={
                 selectedAnswer === currentQuestion.correctAnswer
@@ -149,7 +120,10 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
                 : "Incorrect. The correct answer is: " +
                   currentQuestion.options[currentQuestion.correctAnswer]}
             </p>
-            <Button onClick={handleNextQuestion} className="mt-2 w-full">
+            <Button
+              onClick={handleNextQuestion}
+              className="mt-2 w-full rounded-lg bg-blue-500 font-medium text-white transition-all duration-300 ease-in-out hover:bg-blue-600"
+            >
               Next Question
             </Button>
           </div>
