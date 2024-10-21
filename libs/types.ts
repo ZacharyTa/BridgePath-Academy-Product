@@ -1,3 +1,16 @@
+// Videos
+interface Video {
+  title: string;
+  url: string;
+  tags?: string[];
+}
+
+interface Course {
+  title: string;
+  description: string;
+  category: string;
+  videos: Video[];
+}
 
 // -- Filter --
 

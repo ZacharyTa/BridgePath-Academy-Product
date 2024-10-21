@@ -57,18 +57,55 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Quiz</CardTitle>
+        <CardTitle>Take this Quiz</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="mb-4">{currentQuestion.text}</p>
+        <p className="mb-4 text-lg font-semibold">Test Your Knowledge</p>
+        <p
+          className="mb-4"
+          style={{ fontSize: "1.2rem", marginBottom: "1rem" }}
+        >
+          {currentQuestion.text}
+        </p>
         <div className="space-y-2">
           {currentQuestion.options.map((option, index) => (
             <Button
               key={index}
               variant={selectedAnswer === index ? "default" : "outline"}
-              className="w-full justify-start"
+              className="w-full justify-start p-2"
               onClick={() => handleAnswerSelect(index)}
+              style={
+                selectedAnswer === index
+                  ? {
+                      border: "2px solid #3B82F6",
+                      boxShadow: "0 0 8px #3B82F6",
+                      backgroundColor: "#E0F2FE", // lighter background for selected state
+                    }
+                  : undefined
+              }
+              onMouseOver={(e) => {
+                Object.assign(e.currentTarget.style, {
+                  backgroundColor: "#3B82F6",
+                  cursor: "pointer",
+                });
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "";
+                e.currentTarget.style.cursor = "";
+              }}
             >
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "1.5rem",
+                  height: "1.5rem",
+                  marginRight: "1rem",
+                  borderRadius: "50%",
+                  border: "2px solid #3B82F6",
+                  backgroundColor:
+                    selectedAnswer === index ? "#3B82F6" : "transparent",
+                }}
+              ></span>
               {option}
             </Button>
           ))}
@@ -76,8 +113,24 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
         {!showFeedback && (
           <Button
             onClick={handleSubmit}
-            className="mt-4"
+            className="mt-4 w-full py-2"
             disabled={selectedAnswer === null}
+            style={{
+              backgroundColor: selectedAnswer === null ? "#A0AEC0" : "#3B82F6",
+              fontSize: "1.1rem",
+              padding: "0.75rem",
+              color: "#FFF",
+              borderRadius: "0.5rem",
+              transition: "all 0.3s ease",
+            }}
+            onMouseOver={(e) => {
+              Object.assign(e.currentTarget.style, {
+                boxShadow: "0 0 10px #2563EB",
+              });
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.boxShadow = "";
+            }}
           >
             Submit Answer
           </Button>
@@ -93,9 +146,10 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
             >
               {selectedAnswer === currentQuestion.correctAnswer
                 ? "Correct!"
-                : "Incorrect. Try again!"}
+                : "Incorrect. The correct answer is: " +
+                  currentQuestion.options[currentQuestion.correctAnswer]}
             </p>
-            <Button onClick={handleNextQuestion} className="mt-2">
+            <Button onClick={handleNextQuestion} className="mt-2 w-full">
               Next Question
             </Button>
           </div>

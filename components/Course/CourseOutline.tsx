@@ -30,7 +30,10 @@ export default function CourseOutline({
           disabled={!lesson.completed && index > currentLessonIndex}
         >
           {lesson.completed ? (
-            <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+            <CheckCircle
+              className="mr-2 h-4 w-4 text-green-500"
+              style={{ fontSize: "1.1rem" }}
+            />
           ) : index > currentLessonIndex ? (
             <Lock className="mr-2 h-4 w-4" />
           ) : null}
