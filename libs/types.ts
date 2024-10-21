@@ -1,15 +1,23 @@
 // Videos
-interface Video {
+export interface Video {
   title: string;
   url: string;
   tags?: string[];
 }
 
-interface Course {
+export interface Course {
+  id: number;
   title: string;
-  description: string;
-  category: string;
-  videos: Video[];
+  lessons: Lesson[];
+  progress: number;
+}
+
+
+export interface Lesson {
+  id: number;
+  title: string;
+  completed: boolean;
+  video: Video;
 }
 
 // -- Filter --

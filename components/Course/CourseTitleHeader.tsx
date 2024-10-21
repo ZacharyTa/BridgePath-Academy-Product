@@ -16,7 +16,7 @@ export default function CourseTitleHeader({
   return (
     <div className="mb-8">
       {/* Breadcrumb Button */}
-      <div className="flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         <Button
           variant="outline"
           size="sm"
@@ -27,19 +27,19 @@ export default function CourseTitleHeader({
       </div>
 
       {/* Course Title and Details */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex w-full items-center justify-between">
+        <div className="flex w-full flex-col items-start">
           <h1 className="text-5xl font-extrabold dark:text-white">{title}</h1>
+          <div className="mb-8 mt-8 flex w-full flex-col items-start">
+            <Progress value={progress} className="h-4 w-full" />
+            <p className="text-md mt-2 text-right font-normal dark:text-body">
+              {Math.round(progress)}% Complete
+            </p>
+          </div>
           <p className="text-gray-600 dark:text-gray-300 text-xl">{details}</p>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-1/3">
-          <Progress value={progress} className="h-4 w-full" />
-          <p className="mt-2 text-right text-lg font-medium">
-            {Math.round(progress)}% Complete
-          </p>
-        </div>
       </div>
 
       {/* Visual Divider */}

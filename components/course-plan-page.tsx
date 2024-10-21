@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,50 +10,30 @@ import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
 import QuizContainer from "@/components/Course/QuizContainer";
-import CourseOutline from "@/components/Course/CourseOutline";
+import { Course, Lesson } from "@/libs/types";
 
-interface Lesson {
-  id: number;
-  title: string;
-  videoUrl: string;
-  completed: boolean;
-}
-
-interface Course {
-  id: number;
-  title: string;
+interface CoursePlanPageComponentProps {
   lessons: Lesson[];
-  progress: number;
+  currentLessonIndexParam: number;
+  onSelectLesson: (index: number) => void;
 }
 
-export function CoursePlanPageComponent() {
+export const CoursePlanPageComponent: React.FC<
+  CoursePlanPageComponentProps
+> = ({ lessons, currentLessonIndexParam, onSelectLesson }) => {
   const [currentCourse, setCurrentCourse] = useState<Course>({
     id: 1,
     title: "Introduction to Digital Marketing",
-    lessons: [
-      {
-        id: 1,
-        title: "What is Digital Marketing?",
-        videoUrl: "https://example.com/video1.mp4",
-        completed: false,
-      },
-      {
-        id: 2,
-        title: "Key Digital Marketing Channels",
-        videoUrl: "https://example.com/video2.mp4",
-        completed: false,
-      },
-      {
-        id: 3,
-        title: "Creating a Digital Marketing Strategy",
-        videoUrl: "https://example.com/video3.mp4",
-        completed: false,
-      },
-    ],
+    lessons: lessons,
     progress: 0,
   });
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(
+    currentLessonIndexParam,
+  );
 
-  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  useEffect(() => {
+    setCurrentLessonIndex(currentLessonIndexParam);
+  }, [currentLessonIndexParam]);
 
   const handleLessonComplete = () => {
     const updatedLessons = [...currentCourse.lessons];
@@ -68,14 +48,20 @@ export function CoursePlanPageComponent() {
   const handleNextLesson = () => {
     if (currentLessonIndex < currentCourse.lessons.length - 1) {
       setCurrentLessonIndex(currentLessonIndex + 1);
+      onSelectLesson(currentLessonIndex + 1);
     }
   };
 
   const handlePreviousLesson = () => {
     if (currentLessonIndex > 0) {
       setCurrentLessonIndex(currentLessonIndex - 1);
+      onSelectLesson(currentLessonIndex - 1);
     }
   };
+
+  if (!currentCourse) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto bg-white px-4 py-8 dark:bg-boxdark dark:text-bodydark">
@@ -86,7 +72,7 @@ export function CoursePlanPageComponent() {
       />
 
       <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div className="md:col-span-2">
+        <div className="md:col-span-3">
           <Card className="dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <CardContent className="p-6">
               <Tabs defaultValue="video" className="w-full">
@@ -113,7 +99,7 @@ export function CoursePlanPageComponent() {
                 >
                   <VideoPlayer
                     videoUrl={
-                      currentCourse.lessons[currentLessonIndex].videoUrl
+                      currentCourse.lessons[currentLessonIndex].video.url
                     }
                     onComplete={handleLessonComplete}
                   />
@@ -140,16 +126,9 @@ export function CoursePlanPageComponent() {
           <Card className="mt-8 dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <QuizContainer
               lessonId={currentCourse.lessons[currentLessonIndex].id}
+              onComplete={handleLessonComplete}
             />
           </Card>
-        </div>
-
-        <div className="md:col-span-1">
-          <CourseOutline
-            lessons={currentCourse.lessons}
-            currentLessonIndex={currentLessonIndex}
-            onSelectLesson={setCurrentLessonIndex}
-          />
         </div>
       </div>
 
@@ -171,4 +150,4 @@ export function CoursePlanPageComponent() {
       </div>
     </div>
   );
-}
+};

@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -11,9 +12,13 @@ interface Question {
 
 interface QuizContainerProps {
   lessonId: number;
+  onComplete: () => void;
 }
 
-export default function QuizContainer({ lessonId }: QuizContainerProps) {
+const QuizContainer: React.FC<QuizContainerProps> = ({
+  lessonId,
+  onComplete,
+}) => {
   // In a real application, you would fetch questions based on the lessonId
   const [questions] = useState<Question[]>([
     {
@@ -41,6 +46,9 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
   const handleSubmit = () => {
     if (selectedAnswer !== null) {
       setShowFeedback(true);
+    }
+    if (currentQuestion.correctAnswer === selectedAnswer) {
+      onComplete();
     }
   };
 
@@ -131,4 +139,6 @@ export default function QuizContainer({ lessonId }: QuizContainerProps) {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default QuizContainer;

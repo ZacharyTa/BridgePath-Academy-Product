@@ -1,7 +1,7 @@
 // import { cookies } from "next/headers";
 // import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 // import ECommerce from "@/components/Dashboard/E-commerce";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import LearningLayout from "@/components/Layouts/LearningLayout";
 import { AppProvider } from "@/context/AppContext";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -15,9 +15,9 @@ export default async function RecommendedLearningPathPage() {
   // // const { data } = await supabase.from("recovery").select();
   return (
     <AppProvider>
-      <DefaultLayout>
-        <CoursePlanPageComponent />
-      </DefaultLayout>
+      <LearningLayout>
+        <p />
+      </LearningLayout>
     </AppProvider>
   );
 }
