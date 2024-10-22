@@ -21,7 +21,7 @@ export default function DefaultLayout({
         title: "What is Digital Marketing?",
         video: {
           title: "What is Digital Marketing?",
-          url: "https://example.com/video1.mp4",
+          url: "https://www.youtube.com/watch?v=gkZ4dLMH-B8",
         },
         completed: false,
       },
@@ -30,7 +30,7 @@ export default function DefaultLayout({
         title: "Key Digital Marketing Channels",
         video: {
           title: "Key Digital Marketing Channels",
-          url: "https://example",
+          url: "https://www.youtube.com/watch?v=At8v_Yc044Y",
         },
         completed: false,
       },
@@ -39,7 +39,7 @@ export default function DefaultLayout({
         title: "Creating a Digital Marketing Strategy",
         video: {
           title: "Creating a Digital Marketing Strategy",
-          url: "https://example",
+          url: "https://www.youtube.com/watch?v=Ng_6mK-Zm9E",
         },
         completed: false,
       },

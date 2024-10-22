@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import ReactPlayer from "react-player/youtube";
 import { Button } from "@/components/ui/button";
 
 interface VideoPlayerProps {
@@ -11,30 +12,29 @@ export default function VideoPlayer({
   onComplete,
 }: VideoPlayerProps) {
   const [isCompleted, setIsCompleted] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<ReactPlayer>(null);
 
   const handleVideoEnd = () => {
     setIsCompleted(true);
+    if (playerRef.current) {
+      playerRef.current.seekTo(0); // Seek to the beginning of the video
+      playerRef.current.getInternalPlayer().stopVideo(); // Stops video to prevent related videos from playing
+    }
   };
 
-  const handleMarkAsCompleted = () => {
-    onComplete();
-  };
+  // Add the rel=0 parameter to the YouTube URL to disable related videos
+  const youtubeUrl = `${videoUrl}?rel=0&modestbranding=1&showinfo=0&controls=1`;
 
   return (
-    <div>
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        controls
-        className="w-full"
+    <div className="h-[800px]">
+      <ReactPlayer
+        ref={playerRef}
+        url={youtubeUrl}
+        controls={true}
+        width="100%"
+        height="100%"
         onEnded={handleVideoEnd}
       />
-      {isCompleted && (
-        <Button onClick={handleMarkAsCompleted} className="mt-4">
-          Mark as Completed
-        </Button>
-      )}
     </div>
   );
 }
