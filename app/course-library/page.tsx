@@ -65,6 +65,7 @@ export default async function CourseLibraryPage() {
               jobCategory="Marketing"
               includesCertificate={false}
               includesProject={true}
+              hasAccess={false}
             />
           </div>
           <div className="flex items-center justify-center">
@@ -78,6 +79,7 @@ export default async function CourseLibraryPage() {
               jobCategory="SEO"
               includesCertificate={true}
               includesProject={false}
+              hasAccess={false}
             />
           </div>
           <div className="flex items-center justify-center">

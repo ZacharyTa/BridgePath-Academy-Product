@@ -7,6 +7,7 @@ import {
   Laptop,
   CheckSquare,
   BarChart,
+  Lock,
 } from "lucide-react";
 
 interface CourseCardProps {
@@ -19,6 +20,7 @@ interface CourseCardProps {
   jobCategory?: string;
   includesCertificate?: boolean;
   includesProject?: boolean;
+  hasAccess?: boolean;
 }
 
 export default function CourseCard({
@@ -31,6 +33,7 @@ export default function CourseCard({
   jobCategory = "Technology",
   includesCertificate = true,
   includesProject = true,
+  hasAccess = true,
 }: CourseCardProps) {
   const difficultyPercentage = {
     Beginner: "33%",
@@ -39,7 +42,12 @@ export default function CourseCard({
   };
 
   return (
-    <Card className="w-full max-w-sm overflow-hidden transition-shadow duration-300 hover:shadow-lg dark:border-strokedark dark:bg-boxdark">
+    <Card className="relative w-full max-w-sm overflow-hidden transition-shadow duration-300 hover:shadow-lg dark:border-strokedark dark:bg-boxdark">
+      {!hasAccess && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25">
+          <Lock className="h-12 w-12 text-white" />
+        </div>
+      )}
       <CardHeader className="p-0">
         <div className="relative h-48 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-800 dark:to-purple-900">
           <div className="dark:bg-gray-800 absolute left-4 top-4 rounded-md border border-primary/20 bg-white px-3 py-1.5 text-sm font-bold text-primary shadow-md">

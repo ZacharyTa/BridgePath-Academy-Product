@@ -4,7 +4,7 @@ import Loader from "@/components/common/Loader";
 
 export default function Home() {
   useEffect(() => {
-    window.location.href = "/dashboard";
+    window.location.href = "/course-library";
   }, []);
 
   return (
