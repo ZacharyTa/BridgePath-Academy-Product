@@ -6,71 +6,13 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 // This a login/singup page for Supabase Auth.
 // Successfull login redirects to /api/auth/callback where the Code Exchange is processed (see app/api/auth/callback/route.js).
 export default function Login() {
   const supabase = createClient();
   const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
-
-  const handleForgotPassword = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the default link behavior
-    router.push("/recover-password"); // Redirect to /reset-password
-  };
-
-  // Function to handle email/password sign-in
-  const handleEmailPasswordSignin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // Sign in with email and password
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-
-      // Check if the user has paid by looking at custom claims or user metadata
-      if (!data.user) {
-        console.log("data", data);
-        throw new Error("No user found.");
-      }
-
-      // Checks if the user has access to the admin dashboard
-      const userMetadata = await supabase
-        .from("profiles")
-        .select("has_access")
-        .eq("id", data.user.id);
-
-      if (!userMetadata?.data[0]?.has_access) {
-        throw new Error("Signups restricted to paid users");
-      }
-
-      // Successful login
-      toast.success("Successfully logged in!");
-      // Redirect to dashboard or the appropriate page after login
-      window.location.href = "/dashboard";
-    } catch (error) {
-      console.log("errorssss", error);
-      if (error.message === "Signups restricted to paid users") {
-        toast.error("Signups restricted to paid users");
-      } else {
-        toast.error(error.message);
-      }
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSignup = async (options: {
     type: string;
@@ -82,38 +24,18 @@ export default function Login() {
       const { type, provider } = options;
       const redirectURL = window.location.origin + "/auth/confirm";
 
-      // if (type === "oauth") {
-      //   const { error } = await supabase.auth.signInWithOAuth({
-      //     provider,
-      //     options: {
-      //       redirectTo: redirectURL,
-      //     },
-      //   });
-
-      //   if (error) throw error;
-      // }
-      if (type === "magic_link") {
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
+      if (type === "oauth") {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider,
           options: {
-            shouldCreateUser: false, // prevent a new user being created if there is no user for that email
-            emailRedirectTo: redirectURL,
+            redirectTo: redirectURL,
           },
         });
 
         if (error) throw error;
-
-        toast.success("Check your emails!");
-
-        setIsDisabled(true);
       }
     } catch (error) {
-      if (error.message === "Signups not allowed for otp") {
-        console.log("error", error);
-        toast.error("Signups restricted to paid users"); // Later make this redirect to a preview.lifts-up.com/dashboard.com page
-      } else {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -121,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <main className="bg-gray-100 dark:bg-gray-900 p-8 text-black dark:text-white md:p-24">
+    <main className="flex h-screen flex-col justify-center bg-bodydark1 p-8 text-black dark:bg-boxdark dark:text-white md:p-24">
       <div className="mb-4 text-center">
         <Link
           href="/"
@@ -166,107 +88,50 @@ export default function Login() {
         )}
       </div>
 
-      <h1 className="text-gray-900 mb-12 text-center text-3xl font-extrabold tracking-tight dark:text-white md:text-4xl">
+      <h1 className="mb-12 text-center text-3xl font-extrabold tracking-tight dark:text-white md:text-4xl">
         Sign-in to {config.appName}{" "}
       </h1>
 
       <div className="mx-auto max-w-xl space-y-8">
-        <div className="flex flex-col gap-9">
-          {/* <!-- Sign In Form --> */}
-          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-              <h3 className="font-medium text-black dark:text-white">
-                Sign In Form
-              </h3>
-            </div>
-            <form onSubmit={handleEmailPasswordSignin}>
-              <div className="p-6.5">
-                <div className="mb-4.5">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
+        <button
+          className="btn btn-lg transform bg-white text-black duration-100 hover:scale-105 hover:bg-whiten hover:shadow-lg hover:shadow-meta-6"
+          onClick={() => handleSignup({ type: "oauth", provider: "google" })}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="loading loading-spinner loading-xs"></span>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              viewBox="0 0 48 48"
+            >
+              <path
+                fill="#FFC107"
+                d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+              />
+              <path
+                fill="#FF3D00"
+                d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
+              />
+              <path
+                fill="#4CAF50"
+                d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+              />
+              <path
+                fill="#1976D2"
+                d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+              />
+            </svg>
+          )}
+          Sign-up with Google
+        </button>
 
-                <div className="mb-4.5">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-
-                <div className="mb-5.5 mt-5 flex items-center justify-between">
-                  <label htmlFor="formCheckbox" className="flex cursor-pointer">
-                    <div className="relative pt-0.5">
-                      <input
-                        type="checkbox"
-                        id="formCheckbox"
-                        className="taskCheckbox sr-only"
-                      />
-                      <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark">
-                        <span className="text-white opacity-0">
-                          <svg
-                            className="fill-current"
-                            width="10"
-                            height="7"
-                            viewBox="0 0 10 7"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M9.70685 0.292804C9.89455 0.480344 10 0.734667 10 0.999847C10 1.26503 9.89455 1.51935 9.70685 1.70689L4.70059 6.7072C4.51283 6.89468 4.2582 7 3.9927 7C3.72721 7 3.47258 6.89468 3.28482 6.7072L0.281063 3.70701C0.0986771 3.5184 -0.00224342 3.26578 3.785e-05 3.00357C0.00231912 2.74136 0.10762 2.49053 0.29326 2.30511C0.4789 2.11969 0.730026 2.01451 0.992551 2.01224C1.25508 2.00996 1.50799 2.11076 1.69683 2.29293L3.9927 4.58607L8.29108 0.292804C8.47884 0.105322 8.73347 0 8.99896 0C9.26446 0 9.51908 0.105322 9.70685 0.292804Z"
-                              fill=""
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                    <p>Remember me</p>
-                  </label>
-
-                  <Link
-                    href="#"
-                    onClick={handleForgotPassword}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Forget password?
-                  </Link>
-                </div>
-
-                <button
-                  className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading && (
-                    <span className="loading loading-spinner loading-xs"></span>
-                  )}
-                  Sign In
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div className="text-gray-900 divider text-xs font-medium text-base-content/50 dark:text-white">
+        {/* <div className="text-gray-900 divider text-xs font-medium text-base-content/50 dark:text-white">
           OR
-        </div>
+        </div> */}
 
-        <form
+        {/* <form
           className="form-control w-full space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
@@ -293,7 +158,7 @@ export default function Login() {
             )}
             Send Magic Link
           </button>
-        </form>
+        </form> */}
       </div>
     </main>
   );
