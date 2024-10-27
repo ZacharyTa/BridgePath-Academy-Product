@@ -1,3 +1,4 @@
+"use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +10,7 @@ import {
   BarChart,
   Lock,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
   label?: "Skill Path" | "Free Course";
@@ -35,6 +37,7 @@ export default function CourseCard({
   includesProject = true,
   hasAccess = true,
 }: CourseCardProps) {
+  const router = useRouter();
   const difficultyPercentage = {
     Beginner: "33%",
     Intermediate: "66%",
@@ -121,7 +124,10 @@ export default function CourseCard({
             <Laptop className="mr-2 h-5 w-5 text-primary dark:text-white" />
             <span>{jobCategory}</span>
           </div>
-          <Button className="hover:bg-primary-dark dark:hover:bg-primary-dark h-10 bg-primary px-6 text-white transition-all duration-300 hover:shadow-md">
+          <Button
+            className="hover:bg-primary-dark dark:hover:bg-primary-dark h-10 bg-primary px-6 text-white transition-all duration-300 hover:shadow-md"
+            onClick={() => router.push("/progress-overview")}
+          >
             Start Learning
           </Button>
         </div>

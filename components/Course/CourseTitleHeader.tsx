@@ -1,6 +1,8 @@
+"use client";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CourseTitleHeaderProps {
   title: string;
@@ -13,6 +15,7 @@ export default function CourseTitleHeader({
   progress,
   details,
 }: CourseTitleHeaderProps) {
+  const router = useRouter();
   return (
     <div className="mb-8">
       {/* Breadcrumb Button */}
@@ -21,6 +24,7 @@ export default function CourseTitleHeader({
           variant="outline"
           size="sm"
           className="text-gray-600 dark:text-gray-300 mb-2"
+          onClick={() => router.push("/progress-overview")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Skill Path
         </Button>

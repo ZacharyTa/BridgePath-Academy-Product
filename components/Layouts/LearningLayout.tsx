@@ -22,8 +22,10 @@ export default function DefaultLayout({
         video: {
           title: "What is Digital Marketing?",
           url: "https://www.youtube.com/watch?v=gkZ4dLMH-B8",
+          quiz: [],
         },
         completed: false,
+        resources: [],
       },
       {
         id: 2,
@@ -31,8 +33,10 @@ export default function DefaultLayout({
         video: {
           title: "Key Digital Marketing Channels",
           url: "https://www.youtube.com/watch?v=At8v_Yc044Y",
+          quiz: [],
         },
         completed: false,
+        resources: [],
       },
       {
         id: 3,
@@ -40,8 +44,10 @@ export default function DefaultLayout({
         video: {
           title: "Creating a Digital Marketing Strategy",
           url: "https://www.youtube.com/watch?v=Ng_6mK-Zm9E",
+          quiz: [],
         },
         completed: false,
+        resources: [],
       },
     ],
     progress: 0,

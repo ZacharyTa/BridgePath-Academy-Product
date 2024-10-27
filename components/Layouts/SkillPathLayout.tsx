@@ -1,3 +1,4 @@
+"use client";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Course {
   id: number;
@@ -83,6 +85,7 @@ export default function SkillPathPage({
   ],
   overallProgress = 52,
 }: SkillPathProps) {
+  const router = useRouter();
   return (
     <div className="container mx-auto max-w-6xl bg-white px-4 py-8 dark:bg-boxdark">
       <div className="mb-8">
@@ -135,7 +138,8 @@ export default function SkillPathPage({
             {courses.map((course, index) => (
               <Card
                 key={course.id}
-                className="transition-shadow hover:shadow-lg dark:border-strokedark dark:bg-white"
+                className="cursor-pointer transition-transform duration-100 hover:translate-x-5 hover:shadow-lg dark:border-strokedark dark:bg-white"
+                onClick={() => router.push("/recommended-learning-path")}
               >
                 <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
                   <CardTitle className="text-lg font-semibold dark:text-white">

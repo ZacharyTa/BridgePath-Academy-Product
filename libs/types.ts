@@ -1,8 +1,41 @@
+export interface Option {
+  id: number;
+  option_text: string;
+  is_correct: boolean;
+}
+
+export interface Question {
+  id: number;
+  question_text: string;
+  options: Option[];
+}
+
+// -- Quizzes --
+export interface Quiz {
+  id: number;
+  questions: Question[];
+}
+
 // Videos
 export interface Video {
   title: string;
   url: string;
-  tags?: string[];
+  quiz: Quiz[];
+}
+
+// -- Resources --
+export interface Resource {
+  id: number;
+  resource_link: string;
+  resource_type: "article" | "video" | "website";
+} 
+
+export interface Lesson {
+  id: number;
+  title: string;
+  completed: boolean;
+  video: Video;
+  resources: Resource[];
 }
 
 export interface Course {
@@ -10,14 +43,26 @@ export interface Course {
   title: string;
   lessons: Lesson[];
   progress: number;
+  description?: string;
 }
 
-
-export interface Lesson {
+// -- Skill Paths --
+export interface SkillPath {
   id: number;
   title: string;
-  completed: boolean;
-  video: Video;
+  description: string;
+  difficulty_level: "Beginner" | "Intermediate" | "Advanced";
+  estimated_duration: number; // In hours
+  courses: Course[];
+  has_access: boolean;
+}
+
+// -- Users --
+export interface User {
+  user_id: number;
+  name: string;
+  email: string;
+  role: "student" | "instructor" | "admin";
 }
 
 // -- Filter --
