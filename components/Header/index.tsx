@@ -2,8 +2,8 @@ import Link from "next/link";
 import DarkModeSwitcher from "./DarkModeSwitcher";
 // import DropdownMessage from "./DropdownMessage";
 // import DropdownNotification from "./DropdownNotification";
-import DropdownUser from "./DropdownUser";
 import Image from "next/image";
+import ButtonAccount from "../ButtonAccount";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -126,7 +126,7 @@ const Header = (props: {
           </ul>
 
           {/* <!-- User Area --> */}
-          <DropdownUser />
+          <ButtonAccount />
           {/* <!-- User Area --> */}
         </div>
       </div>

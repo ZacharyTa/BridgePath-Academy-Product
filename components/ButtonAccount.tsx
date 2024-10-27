@@ -1,34 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
-
-import apiClient from "@/libs/api";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import ClickOutside from "@/components/ClickOutside";
 import { createClient } from "@/libs/supabase/client";
-import { Popover, Transition } from "@headlessui/react";
-import { User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import apiClient from "@/libs/api";
+import { useAppContext } from "@/context/AppContext";
 
-// A button to show user some account actions
-//  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).
-//     You have to manually activate the Customer Portal in your Stripe Dashboard (https://dashboard.stripe.com/test/settings/billing/portal)
-//     This is only available if the customer has a customerId (they made a purchase previously)
-//  2. Logout: sign out and go back to homepage
-// See more at https://shipfa.st/docs/components/buttonAccount
 const ButtonAccount = () => {
   const supabase = createClient();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setUser(user);
-    };
-
-    getUser();
-  }, [supabase]);
+  const { user } = useAppContext();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -55,107 +37,111 @@ const ButtonAccount = () => {
   };
 
   return (
-    <Popover className="relative z-10">
-      {({ open }) => (
-        <>
-          <Popover.Button className="btn">
-            {user?.user_metadata?.avatar_url ? (
-              <img
-                src={user?.user_metadata?.avatar_url}
-                alt={"Profile picture"}
-                className="h-6 w-6 shrink-0 rounded-full"
-                referrerPolicy="no-referrer"
-                width={24}
-                height={24}
-              />
-            ) : (
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-base-100 capitalize">
-                {user?.email?.charAt(0)}
-              </span>
-            )}
+    <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
+      <Link
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        className="flex items-center gap-4"
+        href="#"
+      >
+        <span className="hidden text-right lg:block">
+          <span className="block text-sm font-medium text-black dark:text-white">
+            {user?.user_metadata?.full_name || user?.email}
+          </span>
+          <span className="block text-xs">{user?.email}</span>
+        </span>
 
-            {user?.user_metadata?.name ||
-              user?.email?.split("@")[0] ||
-              "Account"}
+        <span className="h-12 w-12 rounded-full">
+          {user?.user_metadata?.avatar_url ? (
+            <img
+              src={user?.user_metadata?.avatar_url}
+              alt={"Profile picture"}
+              className="h-6 h-auto w-6 w-auto shrink-0 rounded-full"
+              referrerPolicy="no-referrer"
+              width={112}
+              height={112}
+            />
+          ) : (
+            <span className="flex h-8 h-auto w-8 w-auto shrink-0 items-center justify-center rounded-full bg-base-100 capitalize">
+              {user?.email?.charAt(0)}
+            </span>
+          )}
+        </span>
 
-            {isLoading ? (
-              <span className="loading loading-spinner loading-xs"></span>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className={`h-5 w-5 opacity-50 duration-200 ${
-                  open ? "rotate-180 transform" : ""
-                }`}
+        {/* <!-- Chevron Down SVG Icon --> */}
+        <svg
+          className="hidden fill-current sm:block"
+          width="12"
+          height="8"
+          viewBox="0 0 12 8"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"
+            fill=""
+          />
+        </svg>
+      </Link>
+
+      {/* <!-- Dropdown Start --> */}
+      {dropdownOpen && (
+        <div
+          className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
+        >
+          <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+            <li>
+              <button
+                onClick={handleBilling}
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            )}
-          </Popover.Button>
-          <Transition
-            enter="transition duration-100 ease-out"
-            enterFrom="transform scale-95 opacity-0"
-            enterTo="transform scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="transform scale-100 opacity-100"
-            leaveTo="transform scale-95 opacity-0"
-          >
-            <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
-              <div className="overflow-hidden rounded-xl bg-base-100 p-1 shadow-xl ring-1 ring-base-content ring-opacity-5">
-                <div className="space-y-0.5 text-sm">
-                  <button
-                    className="flex w-full items-center gap-2 rounded-lg px-4 py-1.5 font-medium duration-200 hover:bg-base-300"
-                    onClick={handleBilling}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="h-5 w-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M2.5 4A1.5 1.5 0 001 5.5V6h18v-.5A1.5 1.5 0 0017.5 4h-15zM19 8.5H1v6A1.5 1.5 0 002.5 16h15a1.5 1.5 0 001.5-1.5v-6zM3 13.25a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zm4.75-.75a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Billing
-                  </button>
-                  <button
-                    className="flex w-full items-center gap-2 rounded-lg px-4 py-1.5 font-medium duration-200 hover:bg-error/20 hover:text-error"
-                    onClick={handleSignOut}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="h-5 w-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
-                        clipRule="evenodd"
-                      />
-                      <path
-                        fillRule="evenodd"
-                        d="M6 10a.75.75 0 01.75-.75h9.546l-1.048-.943a.75.75 0 111.004-1.114l2.5 2.25a.75.75 0 010 1.114l-2.5 2.25a.75.75 0 11-1.004-1.114l1.048-.943H6.75A.75.75 0 016 10z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
-        </>
+                <svg
+                  className="fill-current"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2.5 4A1.5 1.5 0 001 5.5V6h18v-.5A1.5 1.5 0 0017.5 4h-15zM19 8.5H1v6A1.5 1.5 0 002.5 16h15a1.5 1.5 0 001.5-1.5v-6zM3 13.25a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zm4.75-.75a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z"
+                    fill=""
+                  />
+                </svg>
+                Billing
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              >
+                <svg
+                  className="fill-current"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.5375 0.618744H11.6531C10.7594 0.618744 10.0031 1.37499 10.0031 2.26874V4.64062C10.0031 5.05312 10.3469 5.39687 10.7594 5.39687C11.1719 5.39687 11.55 5.05312 11.55 4.64062V2.23437C11.55 2.16562 11.5844 2.13124 11.6531 2.13124H15.5375C16.3625 2.13124 17.0156 2.78437 17.0156 3.60937V18.3562C17.0156 19.1812 16.3625 19.8344 15.5375 19.8344H11.6531C11.5844 19.8344 11.55 19.8 11.55 19.7312V17.3594C11.55 16.9469 11.2062 16.6031 10.7594 16.6031C10.3125 16.6031 10.0031 16.9469 10.0031 17.3594V19.7312C10.0031 20.625 10.7594 21.3812 11.6531 21.3812H15.5375C17.2219 21.3812 18.5625 20.0062 18.5625 18.3562V3.64374C18.5625 1.95937 17.1875 0.618744 15.5375 0.618744Z"
+                    fill=""
+                  />
+                  <path
+                    d="M6.05001 11.7563H12.2031C12.6156 11.7563 12.9594 11.4125 12.9594 11C12.9594 10.5875 12.6156 10.2438 12.2031 10.2438H6.08439L8.21564 8.07813C8.52501 7.76875 8.52501 7.2875 8.21564 6.97812C7.90626 6.66875 7.42501 6.66875 7.11564 6.97812L3.67814 10.4844C3.36876 10.7938 3.36876 11.275 3.67814 11.5844L7.11564 15.0906C7.25314 15.2281 7.45939 15.3312 7.66564 15.3312C7.87189 15.3312 8.04376 15.2625 8.21564 15.125C8.52501 14.8156 8.52501 14.3344 8.21564 14.025L6.05001 11.7563Z"
+                    fill=""
+                  />
+                </svg>
+                Log Out
+              </button>
+            </li>
+          </ul>
+        </div>
       )}
-    </Popover>
+      {/* <!-- Dropdown End --> */}
+    </ClickOutside>
   );
 };
 
