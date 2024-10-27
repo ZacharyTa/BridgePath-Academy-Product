@@ -47,7 +47,7 @@ export default function CourseCard({
   return (
     <Card className="relative w-full max-w-sm overflow-hidden transition-shadow duration-300 hover:shadow-lg dark:border-strokedark dark:bg-boxdark">
       {!hasAccess && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25 dark:bg-opacity-50">
           <Lock className="h-12 w-12 text-white" />
         </div>
       )}

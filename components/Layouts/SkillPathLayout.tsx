@@ -86,6 +86,7 @@ export default function SkillPathPage({
   overallProgress = 52,
 }: SkillPathProps) {
   const router = useRouter();
+  console.log("TEsting");
   return (
     <div className="container mx-auto max-w-6xl bg-white px-4 py-8 dark:bg-boxdark">
       <div className="mb-8">
