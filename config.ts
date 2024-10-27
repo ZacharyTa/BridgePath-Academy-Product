@@ -8,7 +8,7 @@ const config = {
   appDescription:
     "Clear path toward gaining practical skills for modern job roles",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
-  domainName: "admin.lifts-up", // CHANGE THIS LATER
+  domainName: "bridge-path-academy-product.vercel.app", // CHANGE THIS LATER
   crisp: {
     // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (mailgun.supportEmail) otherwise customer support won't work.
     id: "",
