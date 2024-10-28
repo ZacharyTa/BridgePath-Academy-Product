@@ -1,57 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CourseOutline from "@/components/Course/CourseOutline";
 import Header from "@/components/Header/index";
 import { CoursePlanPageComponent } from "@/components/course-plan-page";
 import { Lesson, Course } from "@/libs/types";
+import skillPaths from "@/skillPaths";
 
-export default function DefaultLayout({
+export default function LearningLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-  const [currentCourse, setCurrentCourse] = useState<Course>({
-    id: 1,
-    title: "Introduction to Digital Marketing",
-    lessons: [
-      {
-        id: 1,
-        title: "What is Digital Marketing?",
-        video: {
-          title: "What is Digital Marketing?",
-          url: "https://www.youtube.com/watch?v=gkZ4dLMH-B8",
-          quiz: [],
-        },
-        completed: false,
-        resources: [],
-      },
-      {
-        id: 2,
-        title: "Key Digital Marketing Channels",
-        video: {
-          title: "Key Digital Marketing Channels",
-          url: "https://www.youtube.com/watch?v=At8v_Yc044Y",
-          quiz: [],
-        },
-        completed: false,
-        resources: [],
-      },
-      {
-        id: 3,
-        title: "Creating a Digital Marketing Strategy",
-        video: {
-          title: "Creating a Digital Marketing Strategy",
-          url: "https://www.youtube.com/watch?v=Ng_6mK-Zm9E",
-          quiz: [],
-        },
-        completed: false,
-        resources: [],
-      },
-    ],
-    progress: 0,
-  });
+  const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = parseInt(urlParams.get("courseId") || "0", 10);
+
+    let foundCourse: Course | undefined;
+
+    for (const skillPath of skillPaths) {
+      foundCourse = skillPath.courses.find((course) => course.id === courseId);
+      if (foundCourse) break;
+    }
+
+    if (foundCourse) {
+      setCurrentCourse(foundCourse);
+    }
+  }, []);
+
+  if (!currentCourse) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>

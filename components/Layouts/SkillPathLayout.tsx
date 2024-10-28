@@ -1,4 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +12,7 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import skillPaths from "@/skillPaths";
 
 interface Course {
   id: number;
@@ -33,96 +35,95 @@ interface SkillPathProps {
   overallProgress?: number;
 }
 
-export default function SkillPathPage({
-  title = "Digital Marketing w/ Zapier",
-  description = "Master digital marketing strategies and automate your workflows with Zapier.",
-  totalCourses = 5,
-  estimatedTime = "20 hours",
-  skillLevel = "Intermediate",
-  includesCertification = true,
-  includesCapstone = true,
-  courses = [
-    {
-      id: 1,
-      title: "Introduction to Digital Marketing",
-      description: "Learn the basics of digital marketing strategies.",
-      duration: "3 hours",
-      completed: true,
-      progress: 100,
-    },
-    {
-      id: 2,
-      title: "Social Media Marketing",
-      description: "Master social media platforms for business growth.",
-      duration: "4 hours",
-      completed: true,
-      progress: 100,
-    },
-    {
-      id: 3,
-      title: "Email Marketing Automation",
-      description: "Automate your email marketing campaigns.",
-      duration: "5 hours",
-      completed: false,
-      progress: 60,
-    },
-    {
-      id: 4,
-      title: "Zapier Fundamentals",
-      description: "Learn how to automate workflows with Zapier.",
-      duration: "4 hours",
-      completed: false,
-      progress: 0,
-    },
-    {
-      id: 5,
-      title: "Advanced Marketing Automation",
-      description: "Combine marketing strategies with Zapier automation.",
-      duration: "4 hours",
-      completed: false,
-      progress: 0,
-    },
-  ],
-  overallProgress = 52,
-}: SkillPathProps) {
+export default function SkillPathPage() {
   const router = useRouter();
-  console.log("TEsting");
+  const [skillPath, setSkillPath] = useState<SkillPathProps | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const skillPathId = parseInt(urlParams.get("skillPathId") || "0", 10);
+
+    const foundSkillPath = skillPaths.find((path) => path.id === skillPathId);
+
+    if (foundSkillPath) {
+      const totalCourses = foundSkillPath.courses.length;
+      const estimatedTime = `${foundSkillPath.duration} hours`;
+      const skillLevel = foundSkillPath.difficulty_level;
+      const includesCertification = true; // Assuming all skill paths include certification
+      const includesCapstone = true; // Assuming all skill paths include capstone
+      const overallProgress =
+        foundSkillPath.courses.reduce(
+          (acc, course) => acc + course.progress,
+          0,
+        ) / totalCourses;
+
+      setSkillPath({
+        title: foundSkillPath.title,
+        description: foundSkillPath.description,
+        totalCourses,
+        estimatedTime,
+        skillLevel,
+        includesCertification,
+        includesCapstone,
+        courses: foundSkillPath.courses.map((course) => ({
+          id: course.id,
+          title: course.title,
+          description: course.description || "",
+          duration: `${course.lessons.reduce(
+            (acc, lesson) =>
+              acc + parseInt(lesson.video.url.split("=").pop() || "0", 10),
+            0,
+          )} hours`,
+          completed: course.progress === 100,
+          progress: course.progress,
+        })),
+        overallProgress,
+      });
+    }
+  }, []);
+
+  if (!skillPath) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container mx-auto max-w-6xl bg-white px-4 py-8 dark:bg-boxdark">
       <div className="mb-8">
-        <Progress value={overallProgress} className="h-4 w-full" />
+        <Progress value={skillPath.overallProgress} className="h-4 w-full" />
         <p className="mt-2 text-center text-sm font-medium">
-          {overallProgress}% Completed
+          {skillPath.overallProgress}% Completed
         </p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
-          <h1 className="mb-4 text-4xl font-bold dark:text-white">{title}</h1>
+          <h1 className="mb-4 text-4xl font-bold dark:text-white">
+            {skillPath.title}
+          </h1>
           <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
-            {description}
+            {skillPath.description}
           </p>
 
           <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
               <BookOpen className="mr-2 h-5 w-5 text-primary dark:text-white" />
               <span className="text-base font-semibold dark:text-white">
-                {totalCourses} Courses
+                {skillPath.totalCourses} Courses
               </span>
             </div>
             <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
               <Clock className="mr-2 h-5 w-5 text-primary dark:text-white" />
               <span className="text-base font-semibold dark:text-white">
-                {estimatedTime}
+                {skillPath.estimatedTime}
               </span>
             </div>
             <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
               <Briefcase className="mr-2 h-5 w-5 text-primary dark:text-white" />
               <span className="text-base font-semibold dark:text-white">
-                {skillLevel}
+                {skillPath.skillLevel}
               </span>
             </div>
-            {includesCertification && (
+            {skillPath.includesCertification && (
               <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
                 <Award className="mr-2 h-5 w-5 text-primary dark:text-white" />
                 <span className="text-base font-semibold dark:text-white">
@@ -136,11 +137,15 @@ export default function SkillPathPage({
             Course Plan
           </h2>
           <div className="space-y-4">
-            {courses.map((course, index) => (
+            {skillPath.courses.map((course, index) => (
               <Card
                 key={course.id}
                 className="cursor-pointer transition-transform duration-100 hover:translate-x-5 hover:shadow-lg dark:border-strokedark dark:bg-white"
-                onClick={() => router.push("/recommended-learning-path")}
+                onClick={() =>
+                  router.push(
+                    "/recommended-learning-path?courseId=" + course.id,
+                  )
+                }
               >
                 <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
                   <CardTitle className="text-lg font-semibold dark:text-white">
@@ -191,7 +196,10 @@ export default function SkillPathPage({
                     Current Course
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    {courses.find((course) => !course.completed)?.title}
+                    {
+                      skillPath.courses.find((course) => !course.completed)
+                        ?.title
+                    }
                   </p>
                 </div>
                 <div>
@@ -199,8 +207,10 @@ export default function SkillPathPage({
                     Next Up
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    {courses[
-                      courses.findIndex((course) => !course.completed) + 1
+                    {skillPath.courses[
+                      skillPath.courses.findIndex(
+                        (course) => !course.completed,
+                      ) + 1
                     ]?.title || "Complete!"}
                   </p>
                 </div>
@@ -209,7 +219,7 @@ export default function SkillPathPage({
                     Estimated Time Remaining
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    {courses.reduce(
+                    {skillPath.courses.reduce(
                       (acc, course) =>
                         acc +
                         (course.completed ? 0 : parseInt(course.duration)),

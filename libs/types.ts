@@ -52,7 +52,7 @@ export interface SkillPath {
   title: string;
   description: string;
   difficulty_level: "Beginner" | "Intermediate" | "Advanced";
-  estimated_duration: number; // In hours
+  duration: number; // In hours
   courses: Course[];
   has_access: boolean;
 }

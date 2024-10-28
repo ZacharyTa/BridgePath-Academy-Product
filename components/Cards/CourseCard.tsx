@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
+  id: number;
   label?: "Skill Path" | "Free Course";
   title?: string;
   description?: string;
@@ -26,6 +27,7 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({
+  id,
   label = "Skill Path",
   title = "Web Development",
   description = "Learn the fundamentals of web development, including HTML, CSS, and JavaScript.",
@@ -126,7 +128,7 @@ export default function CourseCard({
           </div>
           <Button
             className="hover:bg-primary-dark dark:hover:bg-primary-dark h-10 bg-primary px-6 text-white transition-all duration-300 hover:shadow-md"
-            onClick={() => router.push("/progress-overview")}
+            onClick={() => router.push("/progress-overview?skillPathId=" + id)}
           >
             Start Learning
           </Button>

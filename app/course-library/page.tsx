@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "edge";
 import { CourseLibrary } from "@/components/CourseLibrary";
 import CourseCard from "@/components/Cards/CourseCard";
+import skillPaths from "@/skillPaths";
 
 // interface CourseCardProps {
 //   label?: "Skill Path" | "Free Course";
@@ -41,60 +42,26 @@ export default async function CourseLibraryPage() {
     <AppProvider>
       <DefaultLayout>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
-          <div className="flex items-center justify-center">
-            <CourseCard
-              label="Skill Path"
-              title="Email Marketing w/ Zapier"
-              description="Automate your email marketing campaigns using Zapier."
-              difficulty="Intermediate"
-              duration="20 Hours"
-              courseCount={5}
-              jobCategory="Marketing"
-              includesCertificate={true}
-              includesProject={true}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <CourseCard
-              label="Free Course"
-              title="Marketing CRM with Klaviyo"
-              description="Learn how to manage customer relationships using Klaviyo."
-              difficulty="Beginner"
-              duration="15 Hours"
-              courseCount={3}
-              jobCategory="Marketing"
-              includesCertificate={false}
-              includesProject={true}
-              hasAccess={false}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <CourseCard
-              label="Skill Path"
-              title="Advanced SEO Techniques"
-              description="Master advanced SEO techniques to improve your website's ranking."
-              difficulty="Advanced"
-              duration="30 Hours"
-              courseCount={7}
-              jobCategory="SEO"
-              includesCertificate={true}
-              includesProject={false}
-              hasAccess={false}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <CourseCard
-              label="Free Course"
-              title="Content Marketing Strategy"
-              description="Develop a comprehensive content marketing strategy."
-              difficulty="Intermediate"
-              duration="25 Hours"
-              courseCount={6}
-              jobCategory="Content Marketing"
-              includesCertificate={true}
-              includesProject={true}
-            />
-          </div>
+          {skillPaths.map((skillPath) => (
+            <div
+              key={skillPath.id}
+              className="flex items-center justify-center"
+            >
+              <CourseCard
+                label="Skill Path"
+                id={skillPath.id}
+                title={skillPath.title}
+                description={skillPath.description}
+                difficulty={skillPath.difficulty_level}
+                duration={`${skillPath.duration} Hours`}
+                courseCount={skillPath.courses.length}
+                jobCategory="Marketing"
+                includesCertificate={true}
+                includesProject={true}
+                hasAccess={skillPath.has_access}
+              />
+            </div>
+          ))}
         </div>
       </DefaultLayout>
     </AppProvider>
