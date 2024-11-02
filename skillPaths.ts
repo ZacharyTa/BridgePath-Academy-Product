@@ -122,25 +122,25 @@ const skillPaths: SkillPath[] = [
   },
   {
     id: 3,
-    title: "Social Media Marketing",
+    title: "Introduction to Zapier",
     description: "Master social media platforms for business growth.",
-    difficulty_level: "Intermediate",
+    difficulty_level: "Beginner",
     duration: 4,
-    has_access: false,
+    has_access: true,
     courses: [
       {
         id: 3,
-        title: "Social Media Basics",
+        title: "Zapier 101",
         description: "Learn the basics of social media marketing",
         progress: 0,
         lessons: [
           {
             id: 3,
-            title: "Introduction to Social Media",
+            title: "Zapier 102",
             completed: false,
             video: {
-              title: "Introduction to Social Media",
-              url: "https://www.youtube.com/watch?v=example10",
+              title: "Zapier 103",
+              url: "https://youtu.be/PZyXBkn9lnI",
               quiz: [
                 {
                   id: 3,
