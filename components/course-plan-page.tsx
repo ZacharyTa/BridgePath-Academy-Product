@@ -22,8 +22,8 @@ export const CoursePlanPageComponent: React.FC<
   CoursePlanPageComponentProps
 > = ({ lessons, currentLessonIndexParam, onSelectLesson }) => {
   const [currentCourse, setCurrentCourse] = useState<Course>({
-    id: 1,
-    title: "Introduction to Digital Marketing",
+    id: lessons[currentLessonIndexParam].id,
+    title: lessons[currentLessonIndexParam].video.title,
     lessons: lessons,
     progress: 0,
   });
@@ -49,6 +49,11 @@ export const CoursePlanPageComponent: React.FC<
     if (currentLessonIndex < currentCourse.lessons.length - 1) {
       setCurrentLessonIndex(currentLessonIndex + 1);
       onSelectLesson(currentLessonIndex + 1);
+      setCurrentCourse({
+        ...currentCourse,
+        id: currentCourse.lessons[currentLessonIndex + 1].id,
+        title: currentCourse.lessons[currentLessonIndex + 1].video.title,
+      });
     }
   };
 
@@ -56,6 +61,11 @@ export const CoursePlanPageComponent: React.FC<
     if (currentLessonIndex > 0) {
       setCurrentLessonIndex(currentLessonIndex - 1);
       onSelectLesson(currentLessonIndex - 1);
+      setCurrentCourse({
+        ...currentCourse,
+        id: currentCourse.lessons[currentLessonIndex - 1].id,
+        title: currentCourse.lessons[currentLessonIndex - 1].video.title,
+      });
     }
   };
 
@@ -125,6 +135,7 @@ export const CoursePlanPageComponent: React.FC<
 
           <Card className="mt-8 dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <QuizContainer
+              quizzes={currentCourse.lessons[currentLessonIndex].video.quiz}
               lessonId={currentCourse.lessons[currentLessonIndex].id}
               onComplete={handleLessonComplete}
             />

@@ -163,6 +163,66 @@ const skillPaths: SkillPath[] = [
                     },
                   ],
                 },
+                {
+                  id: 4,
+                  questions: [
+                    {
+                      id: 4,
+                      question_text: "Qurstion 2222?",
+                      options: [
+                        {
+                          id: 4,
+                          option_text: "Please",
+                          is_correct: true,
+                        },
+                        {
+                          id: 4,
+                          option_text: "Work",
+                          is_correct: false,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            resources: [
+              {
+                id: 3,
+                resource_link: "https://www.example.com/social-media-basics",
+                resource_type: "article",
+              },
+            ],
+          },
+          {
+            id: 3,
+            title: "Zapier 104",
+            completed: false,
+            video: {
+              title: "Zapier 105",
+              url: "https://www.youtube.com/watch?v=0eDyZfY8h4Q",
+              quiz: [
+                {
+                  id: 3,
+                  questions: [
+                    {
+                      id: 3,
+                      question_text: "Question 2?",
+                      options: [
+                        {
+                          id: 6,
+                          option_text: "Answer 1",
+                          is_correct: true,
+                        },
+                        {
+                          id: 7,
+                          option_text: "Answer 2",
+                          is_correct: false,
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
             resources: [

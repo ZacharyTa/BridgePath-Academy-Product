@@ -2,42 +2,30 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface Question {
-  id: number;
-  text: string;
-  options: string[];
-  correctAnswer: number;
-}
+import { Quiz, Question, Option } from "@/libs/types";
 
 interface QuizContainerProps {
+  quizzes: Quiz[];
   lessonId: number;
   onComplete: () => void;
 }
 
 const QuizContainer: React.FC<QuizContainerProps> = ({
+  quizzes,
   lessonId,
   onComplete,
 }) => {
-  // In a real application, you would fetch questions based on the lessonId
-  const [questions] = useState<Question[]>([
-    {
-      id: 1,
-      text: "What is the primary goal of digital marketing?",
-      options: [
-        "Increase offline sales",
-        "Promote products and services online",
-        "Reduce marketing costs",
-        "Eliminate traditional marketing",
-      ],
-      correctAnswer: 1,
-    },
-    // Add more questions here
-  ]);
-
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  if (!quizzes || quizzes.length === 0) {
+    return null;
+  }
+
+  const currentQuiz = quizzes[currentQuizIndex];
+  const currentQuestion = currentQuiz.questions[currentQuestionIndex];
 
   const handleAnswerSelect = (index: number) => {
     setSelectedAnswer(index);
@@ -46,38 +34,41 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
   const handleSubmit = () => {
     if (selectedAnswer !== null) {
       setShowFeedback(true);
-    }
-    if (currentQuestion.correctAnswer === selectedAnswer) {
-      onComplete();
+      if (currentQuestion.options[selectedAnswer].is_correct) {
+        onComplete();
+      }
     }
   };
 
   const handleNextQuestion = () => {
     setSelectedAnswer(null);
     setShowFeedback(false);
-    if (currentQuestionIndex < questions.length - 1) {
+
+    if (currentQuestionIndex < currentQuiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else if (currentQuizIndex < quizzes.length - 1) {
+      setCurrentQuizIndex(currentQuizIndex + 1);
+      setCurrentQuestionIndex(0);
     }
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const correctAnswerIndex = currentQuestion.options.findIndex(
+    (option) => option.is_correct,
+  );
 
   return (
     <Card className="relative">
-      {showFeedback && selectedAnswer === currentQuestion.correctAnswer && (
-        <div className="pointer-events-none absolute inset-0 bg-green-100 opacity-30 dark:bg-green-900"></div>
-      )}
+      {showFeedback &&
+        selectedAnswer !== null &&
+        currentQuestion.options[selectedAnswer].is_correct && (
+          <div className="pointer-events-none absolute inset-0 bg-green-100 opacity-30 dark:bg-green-900"></div>
+        )}
       <CardHeader>
         <CardTitle>Take this Quiz</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-lg font-semibold">Test Your Knowledge</p>
-        <p
-          className="mb-4"
-          style={{ fontSize: "1.2rem", marginBottom: "1rem" }}
-        >
-          {currentQuestion.text}
-        </p>
+        <p className="mb-4 text-lg">{currentQuestion.question_text}</p>
         <div className="space-y-2">
           {currentQuestion.options.map((option, index) => (
             <Button
@@ -97,7 +88,7 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
                     : "border-blue-500"
                 }`}
               ></span>
-              {option}
+              {option.option_text}
             </Button>
           ))}
         </div>
@@ -118,15 +109,16 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
           <div className="relative z-10 mt-4">
             <p
               className={
-                selectedAnswer === currentQuestion.correctAnswer
+                selectedAnswer !== null &&
+                currentQuestion.options[selectedAnswer].is_correct
                   ? "text-green-600"
                   : "text-red-600"
               }
             >
-              {selectedAnswer === currentQuestion.correctAnswer
+              {selectedAnswer !== null &&
+              currentQuestion.options[selectedAnswer].is_correct
                 ? "Correct!"
-                : "Incorrect. The correct answer is: " +
-                  currentQuestion.options[currentQuestion.correctAnswer]}
+                : `Incorrect. The correct answer is: ${currentQuestion.options[correctAnswerIndex].option_text}`}
             </p>
             <Button
               onClick={handleNextQuestion}

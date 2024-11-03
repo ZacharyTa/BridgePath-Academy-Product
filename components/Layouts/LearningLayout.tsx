@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import CourseOutline from "@/components/Course/CourseOutline";
 import Header from "@/components/Header/index";
 import { CoursePlanPageComponent } from "@/components/course-plan-page";
-import { Lesson, Course } from "@/libs/types";
+import { Course } from "@/libs/types";
 import skillPaths from "@/skillPaths";
 
 export default function LearningLayout({
@@ -28,6 +28,7 @@ export default function LearningLayout({
 
     if (foundCourse) {
       setCurrentCourse(foundCourse);
+      console.log("found course", foundCourse);
     }
   }, []);
 
