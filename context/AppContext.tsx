@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { parseCookies } from "nookies"; // Import nookies for cookie management
 import { User } from "@supabase/supabase-js";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"; // Import Supabase client
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"; // Import Supabase client
 
 // Define the type of the context value
 interface AppContextType {
@@ -30,7 +30,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   // Initialize Supabase client
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
 
   // Effect to set isClient to true and get the initial view from local storage
   useEffect(() => {
@@ -80,21 +80,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, []); // Run only on mount
 
   // Effect to get the user data from Supabase
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user data:", error);
-      } else {
-        setUser(user);
-        console.log("User data set in AppContext:", user);
-      }
-    };
-    getUser();
-  }, [supabase]);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     const {
+  //       data: { user },
+  //       error,
+  //     } = await supabase.auth.getUser();
+  //     if (error) {
+  //       console.error("Error fetching user data:", error);
+  //     } else {
+  //       setUser(user);
+  //       console.log("User data set in AppContext:", user);
+  //     }
+  //   };
+  //   getUser();
+  // }, [supabase]);
 
   // Return the provider with the current view and a function to update it
   return (

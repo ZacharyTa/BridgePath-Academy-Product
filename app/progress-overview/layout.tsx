@@ -9,15 +9,15 @@ export default async function ProgressOverviewPageLayout({
 }: {
   children: ReactNode;
 }) {
-  const supabase = createServerComponentClient({ cookies });
+  // const supabase = createServerComponentClient({ cookies });
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession();
 
-  if (!session) {
-    redirect(config.auth.loginUrl);
-  }
+  // if (!session) {
+  //   redirect(config.auth.loginUrl);
+  // }
 
   return (
     <div className="progress-overview-page-layout">

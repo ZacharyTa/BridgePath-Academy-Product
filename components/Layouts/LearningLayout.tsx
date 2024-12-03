@@ -5,6 +5,7 @@ import Header from "@/components/Header/index";
 import { CoursePlanPageComponent } from "@/components/course-plan-page";
 import { Course } from "@/libs/types";
 import skillPaths from "@/skillPaths";
+import { getCourseId, getLessonId } from "@/helper/useCookies";
 
 export default function LearningLayout({
   children,
@@ -16,19 +17,24 @@ export default function LearningLayout({
   const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseId = parseInt(urlParams.get("courseId") || "0", 10);
+    const courseId = getCourseId();
 
-    let foundCourse: Course | undefined;
+    if (courseId) {
+      let foundCourse: Course | undefined;
 
-    for (const skillPath of skillPaths) {
-      foundCourse = skillPath.courses.find((course) => course.id === courseId);
-      if (foundCourse) break;
-    }
+      for (const skillPath of skillPaths) {
+        foundCourse = skillPath.courses.find(
+          (course) => course.id === courseId,
+        );
+        if (foundCourse) break;
+      }
 
-    if (foundCourse) {
-      setCurrentCourse(foundCourse);
-      console.log("found course", foundCourse);
+      if (foundCourse) {
+        setCurrentCourse(foundCourse);
+      }
+    } else {
+      // Handle case when courseId is not set
+      // For example, redirect to course library
     }
   }, []);
 

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Lock } from "lucide-react";
 import ClickOutside from "@/components/ClickOutside";
 import { Lesson } from "@/libs/types";
+import { setUserLessonId } from "@/helper/useCookies";
 
 interface CourseOutlineProps {
   lessons: Lesson[];
@@ -17,6 +18,11 @@ export default function CourseOutline({
   onSelectLesson,
 }: CourseOutlineProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const handleLessonClick = (index: number) => {
+    setUserLessonId(lessons[index].id);
+    onSelectLesson(index);
+  };
 
   return (
     <div className="relative">
@@ -73,7 +79,7 @@ export default function CourseOutline({
                   key={lesson.id}
                   variant={index === currentLessonIndex ? "default" : "outline"}
                   className="w-full justify-start"
-                  onClick={() => onSelectLesson(index)}
+                  onClick={() => handleLessonClick(index)}
                   disabled={!lesson.completed && index > currentLessonIndex}
                 >
                   {lesson.completed ? (

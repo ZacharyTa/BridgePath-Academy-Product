@@ -1,17 +1,15 @@
 // middleware.ts
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { updateSession } from '@/utils/supabase/middleware'
 import { NextResponse, type NextRequest } from "next/server";
 import appConfig from "@/config";
 
 export async function middleware(request: NextRequest) {
   // Create the Supabase client using the middleware helper
-  const response = NextResponse.next();
-  const supabase = createMiddlewareClient({ req: request, res: response });
 
   // Retrieve the authenticated user session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession();
 
   // -- Development only: Do not use in production! --
   // Prevent redirects in development to allow for easier debugging
@@ -27,7 +25,7 @@ export async function middleware(request: NextRequest) {
   // Urls cancel redirect logic
   const isAtLoginPage = request.nextUrl.pathname === loginUrl.pathname;
 
-  console.log("No session found, redirecting to login page", session);
+  // console.log("No session found, redirecting to login page", session);
 
   // Redirect unauthenticated users to the login page
   // if (!session) {
@@ -85,7 +83,7 @@ export async function middleware(request: NextRequest) {
   // }
 
   // If all checks pass, continue the request
-  return response;
+  return await updateSession(request)
 }
 
 // Configure the middleware to apply globally to all routes except static assets

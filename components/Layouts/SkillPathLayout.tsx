@@ -13,6 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import skillPaths from "@/skillPaths";
+import { getSkillPathId, setCourseId } from "@/helper/useCookies";
 
 interface Course {
   id: number;
@@ -40,45 +41,49 @@ export default function SkillPathPage() {
   const [skillPath, setSkillPath] = useState<SkillPathProps | null>(null);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const skillPathId = parseInt(urlParams.get("skillPathId") || "0", 10);
+    const skillPathId = getSkillPathId();
 
-    const foundSkillPath = skillPaths.find((path) => path.id === skillPathId);
+    if (skillPathId) {
+      const foundSkillPath = skillPaths.find((path) => path.id === skillPathId);
 
-    if (foundSkillPath) {
-      const totalCourses = foundSkillPath.courses.length;
-      const estimatedTime = `${foundSkillPath.duration} hours`;
-      const skillLevel = foundSkillPath.difficulty_level;
-      const includesCertification = true; // Assuming all skill paths include certification
-      const includesCapstone = true; // Assuming all skill paths include capstone
-      const overallProgress =
-        foundSkillPath.courses.reduce(
-          (acc, course) => acc + course.progress,
-          0,
-        ) / totalCourses;
-
-      setSkillPath({
-        title: foundSkillPath.title,
-        description: foundSkillPath.description,
-        totalCourses,
-        estimatedTime,
-        skillLevel,
-        includesCertification,
-        includesCapstone,
-        courses: foundSkillPath.courses.map((course) => ({
-          id: course.id,
-          title: course.title,
-          description: course.description || "",
-          duration: `${course.lessons.reduce(
-            (acc, lesson) =>
-              acc + parseInt(lesson.video.url.split("=").pop() || "0", 10),
+      if (foundSkillPath) {
+        const totalCourses = foundSkillPath.courses.length;
+        const estimatedTime = `${foundSkillPath.duration} hours`;
+        const skillLevel = foundSkillPath.difficulty_level;
+        const includesCertification = true;
+        const includesCapstone = true;
+        const overallProgress =
+          foundSkillPath.courses.reduce(
+            (acc, course) => acc + course.progress,
             0,
-          )} hours`,
-          completed: course.progress === 100,
-          progress: course.progress,
-        })),
-        overallProgress,
-      });
+          ) / totalCourses;
+
+        setSkillPath({
+          title: foundSkillPath.title,
+          description: foundSkillPath.description,
+          totalCourses,
+          estimatedTime,
+          skillLevel,
+          includesCertification,
+          includesCapstone,
+          courses: foundSkillPath.courses.map((course) => ({
+            id: course.id,
+            title: course.title,
+            description: course.description || "",
+            duration: `${course.lessons.reduce(
+              (acc, lesson) =>
+                acc + parseInt(lesson.video.url.split("=").pop() || "0", 10),
+              0,
+            )} hours`,
+            completed: course.progress === 100,
+            progress: course.progress,
+          })),
+          overallProgress,
+        });
+      }
+    } else {
+      // Handle case when skillPathId is not set
+      router.push("/course-library");
     }
   }, []);
 
@@ -141,11 +146,10 @@ export default function SkillPathPage() {
               <Card
                 key={course.id}
                 className="cursor-pointer transition-transform duration-100 hover:translate-x-5 hover:shadow-lg dark:border-strokedark dark:bg-white"
-                onClick={() =>
-                  router.push(
-                    "/recommended-learning-path?courseId=" + course.id,
-                  )
-                }
+                onClick={() => {
+                  setCourseId(course.id);
+                  router.push("/recommended-learning-path");
+                }}
               >
                 <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
                   <CardTitle className="text-lg font-semibold dark:text-white">

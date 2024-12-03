@@ -11,6 +11,11 @@ import {
   Lock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+  setCourseId,
+  setUserLessonId,
+  setSkillPathId,
+} from "@/helper/useCookies";
 
 interface CourseCardProps {
   id: number;
@@ -44,6 +49,13 @@ export default function CourseCard({
     Beginner: "33%",
     Intermediate: "66%",
     Advanced: "100%",
+  };
+
+  const handleClick = () => {
+    setSkillPathId(id);
+    setUserLessonId(0);
+    setCourseId(0);
+    router.push("/progress-overview");
   };
 
   return (
@@ -128,7 +140,7 @@ export default function CourseCard({
           </div>
           <Button
             className="hover:bg-primary-dark dark:hover:bg-primary-dark h-10 bg-primary px-6 text-white transition-all duration-300 hover:shadow-md"
-            onClick={() => router.push("/progress-overview?skillPathId=" + id)}
+            onClick={handleClick}
           >
             Start Learning
           </Button>

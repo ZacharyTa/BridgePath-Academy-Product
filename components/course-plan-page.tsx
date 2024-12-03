@@ -11,6 +11,7 @@ import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
 import QuizContainer from "@/components/Course/QuizContainer";
 import { Course, Lesson } from "@/libs/types";
+import { setUserLessonId, getUserLessonId } from "@/helper/useCookies";
 
 interface CoursePlanPageComponentProps {
   lessons: Lesson[];
@@ -32,8 +33,24 @@ export const CoursePlanPageComponent: React.FC<
   );
 
   useEffect(() => {
-    setCurrentLessonIndex(currentLessonIndexParam);
-  }, [currentLessonIndexParam]);
+    // Get lesson ID from cookies
+    const lessonId = getUserLessonId();
+    if (lessonId) {
+      const lessonIndex = lessons.findIndex((lesson) => lesson.id === lessonId);
+      if (lessonIndex !== -1) {
+        setCurrentLessonIndex(lessonIndex);
+        onSelectLesson(lessonIndex);
+        setCurrentCourse((prevCourse) => ({
+          ...prevCourse,
+          id: lessons[lessonIndex].id,
+          title: lessons[lessonIndex].video.title,
+        }));
+      }
+    } else {
+      // If no lesson ID in cookies, use the default
+      setCurrentLessonIndex(currentLessonIndexParam);
+    }
+  }, [lessons, currentLessonIndexParam, onSelectLesson]);
 
   const handleLessonComplete = () => {
     const updatedLessons = [...currentCourse.lessons];
@@ -47,24 +64,28 @@ export const CoursePlanPageComponent: React.FC<
 
   const handleNextLesson = () => {
     if (currentLessonIndex < currentCourse.lessons.length - 1) {
-      setCurrentLessonIndex(currentLessonIndex + 1);
-      onSelectLesson(currentLessonIndex + 1);
+      const nextLessonIndex = currentLessonIndex + 1;
+      setUserLessonId(currentCourse.lessons[nextLessonIndex].id);
+      setCurrentLessonIndex(nextLessonIndex);
+      onSelectLesson(nextLessonIndex);
       setCurrentCourse({
         ...currentCourse,
-        id: currentCourse.lessons[currentLessonIndex + 1].id,
-        title: currentCourse.lessons[currentLessonIndex + 1].video.title,
+        id: currentCourse.lessons[nextLessonIndex].id,
+        title: currentCourse.lessons[nextLessonIndex].video.title,
       });
     }
   };
 
   const handlePreviousLesson = () => {
     if (currentLessonIndex > 0) {
-      setCurrentLessonIndex(currentLessonIndex - 1);
-      onSelectLesson(currentLessonIndex - 1);
+      const prevLessonIndex = currentLessonIndex - 1;
+      setUserLessonId(currentCourse.lessons[prevLessonIndex].id);
+      setCurrentLessonIndex(prevLessonIndex);
+      onSelectLesson(prevLessonIndex);
       setCurrentCourse({
         ...currentCourse,
-        id: currentCourse.lessons[currentLessonIndex - 1].id,
-        title: currentCourse.lessons[currentLessonIndex - 1].video.title,
+        id: currentCourse.lessons[prevLessonIndex].id,
+        title: currentCourse.lessons[prevLessonIndex].video.title,
       });
     }
   };
