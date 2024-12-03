@@ -135,49 +135,182 @@ const skillPaths: SkillPath[] = [
         progress: 0,
         lessons: [
           {
-            id: 3,
-            title: "Zapier 102",
+            id: 1,
+            title: "Getting Started",
             completed: false,
             video: {
-              title: "Zapier 103",
+              title: "Zapier 101",
               url: "https://youtu.be/PZyXBkn9lnI",
               quiz: [
+                // Existing quiz content
+              ],
+            },
+            resources: [
+              // Existing resources
+            ],
+          },
+          {
+            id: 2,
+            title: "Zapier Episode 1",
+            completed: false,
+            video: {
+              title: "Zapier Episode 1",
+              url: "https://youtu.be/KP1T2QPfKoI",
+              quiz: [
                 {
-                  id: 3,
+                  id: 1,
                   questions: [
                     {
-                      id: 3,
-                      question_text: "Which platform is best for B2B marketing?",
+                      id: 1,
+                      question_text: "Where can you go to set-up your first Zap?",
                       options: [
                         {
-                          id: 6,
-                          option_text: "LinkedIn",
+                          id: 1,
+                          option_text: "Homepage under \"Start from scratch\"",
+                          is_correct: false,
+                        },
+                        {
+                          id: 2,
+                          option_text: "Left-hand sidebar anywhere on the website",
+                          is_correct: false,
+                        },
+                        {
+                          id: 3,
+                          option_text: "\"Create\" in the top-left side on the homepage",
+                          is_correct: false,
+                        },
+                        {
+                          id: 4,
+                          option_text: "All of the above",
+                          is_correct: true,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            resources: [],
+          },
+          {
+            id: 3,
+            title: "Zapier Episode 2",
+            completed: false,
+            video: {
+              title: "Zapier Episode 2",
+              url: "https://youtu.be/Y_Nwe9hJOww",
+              quiz: [
+                {
+                  id: 2,
+                  questions: [
+                    {
+                      id: 2,
+                      question_text: "What is the purpose of a filter in Zapier?",
+                      options: [
+                        {
+                          id: 5,
+                          option_text: "To allow tasks to proceed only when certain conditions are met.",
                           is_correct: true,
                         },
                         {
+                          id: 6,
+                          option_text: "To schedule tasks for a specific time.",
+                          is_correct: false,
+                        },
+                        {
                           id: 7,
-                          option_text: "Instagram",
+                          option_text: "To add delays between actions in a workflow.",
+                          is_correct: false,
+                        },
+                        {
+                          id: 8,
+                          option_text: "To organize Zaps into different folders.",
                           is_correct: false,
                         },
                       ],
                     },
                   ],
                 },
+              ],
+            },
+            resources: [],
+          },
+          {
+            id: 4,
+            title: "Zapier Episode 3",
+            completed: false,
+            video: {
+              title: "Zapier Episode 3",
+              url: "https://youtu.be/ZqtSW-LMhcE",
+              quiz: [
+                {
+                  id: 3,
+                  questions: [
+                    {
+                      id: 3,
+                      question_text: "How did we find \"YouTube\" when we set up our Trigger?",
+                      options: [
+                        {
+                          id: 9,
+                          option_text: "By searching for it in the app search bar.",
+                          is_correct: true,
+                        },
+                        {
+                          id: 10,
+                          option_text: "By typing it directly into the Zap action field.",
+                          is_correct: false,
+                        },
+                        {
+                          id: 11,
+                          option_text: "By selecting it from a dropdown menu of pre-integrated apps.",
+                          is_correct: false,
+                        },
+                        {
+                          id: 12,
+                          option_text: "By adding it manually through the API connection settings.",
+                          is_correct: false,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            resources: [],
+          },
+          {
+            id: 5,
+            title: "Zapier Episode 4",
+            completed: false,
+            video: {
+              title: "Zapier Episode 4",
+              url: "https://youtu.be/UULL5eRTlEQ",
+              quiz: [
                 {
                   id: 4,
                   questions: [
                     {
                       id: 4,
-                      question_text: "Qurstion 2222?",
+                      question_text: "What is a knowledge source?",
                       options: [
                         {
-                          id: 4,
-                          option_text: "Please",
+                          id: 13,
+                          option_text: "A data visualization tool integrated into the chatbot interface.",
+                          is_correct: false,
+                        },
+                        {
+                          id: 14,
+                          option_text: "A repository of information that a chatbot uses to provide answers or perform tasks.",
                           is_correct: true,
                         },
                         {
-                          id: 4,
-                          option_text: "Work",
+                          id: 15,
+                          option_text: "A feature that allows chatbots to translate languages in real time.",
+                          is_correct: false,
+                        },
+                        {
+                          id: 16,
+                          option_text: "A plugin used to train chatbots for natural language understanding.",
                           is_correct: false,
                         },
                       ],
@@ -186,52 +319,7 @@ const skillPaths: SkillPath[] = [
                 },
               ],
             },
-            resources: [
-              {
-                id: 3,
-                resource_link: "https://www.example.com/social-media-basics",
-                resource_type: "article",
-              },
-            ],
-          },
-          {
-            id: 3,
-            title: "Zapier 104",
-            completed: false,
-            video: {
-              title: "Zapier 105",
-              url: "https://www.youtube.com/watch?v=0eDyZfY8h4Q",
-              quiz: [
-                {
-                  id: 3,
-                  questions: [
-                    {
-                      id: 3,
-                      question_text: "Question 2?",
-                      options: [
-                        {
-                          id: 6,
-                          option_text: "Answer 1",
-                          is_correct: true,
-                        },
-                        {
-                          id: 7,
-                          option_text: "Answer 2",
-                          is_correct: false,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            resources: [
-              {
-                id: 3,
-                resource_link: "https://www.example.com/social-media-basics",
-                resource_type: "article",
-              },
-            ],
+            resources: [],
           },
         ],
       },
