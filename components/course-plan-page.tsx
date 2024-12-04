@@ -11,7 +11,13 @@ import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
 import QuizContainer from "@/components/Course/QuizContainer";
 import { Course, Lesson } from "@/libs/types";
-import { setUserLessonId, getUserLessonId } from "@/helper/useCookies";
+import {
+  setUserLessonId,
+  getUserLessonId,
+  setCompletedLessons,
+  getCompletedLessons,
+  getSkillPathId,
+} from "@/helper/useCookies";
 
 interface CoursePlanPageComponentProps {
   lessons: Lesson[];
@@ -31,6 +37,7 @@ export const CoursePlanPageComponent: React.FC<
   const [currentLessonIndex, setCurrentLessonIndex] = useState(
     currentLessonIndexParam,
   );
+  const skillPathId = getSkillPathId();
 
   useEffect(() => {
     // Get lesson ID from cookies
@@ -50,15 +57,41 @@ export const CoursePlanPageComponent: React.FC<
       // If no lesson ID in cookies, use the default
       setCurrentLessonIndex(currentLessonIndexParam);
     }
+
+    // Load completed lessons from cookies
+    const completedLessonIds = getCompletedLessons(skillPathId!) || [];
+
+    const updatedLessons = lessons.map((lesson) => ({
+      ...lesson,
+      completed: completedLessonIds.includes(lesson.id),
+    }));
+
+    setCurrentCourse((prevCourse) => ({
+      ...prevCourse,
+      lessons: updatedLessons,
+    }));
+
+    // Calculate progress
+    const progress = (completedLessonIds.length / updatedLessons.length) * 100;
+    setCurrentCourse((prevCourse) => ({
+      ...prevCourse,
+      progress,
+    }));
   }, [lessons, currentLessonIndexParam, onSelectLesson]);
 
   const handleLessonComplete = () => {
     const updatedLessons = [...currentCourse.lessons];
     updatedLessons[currentLessonIndex].completed = true;
-    const progress =
-      (updatedLessons.filter((lesson) => lesson.completed).length /
-        updatedLessons.length) *
-      100;
+
+    // Get the list of completed lesson IDs
+    const completedLessons = updatedLessons
+      .filter((lesson) => lesson.completed)
+      .map((lesson) => lesson.id);
+
+    // Save to cookies
+    setCompletedLessons(skillPathId!, completedLessons);
+
+    const progress = (completedLessons.length / updatedLessons.length) * 100;
     setCurrentCourse({ ...currentCourse, lessons: updatedLessons, progress });
   };
 

@@ -28,6 +28,24 @@ export function getUserLessonId(): number | null {
   return lessonId ? parseInt(lessonId, 10) : null;
 }
 
+export function setCompletedLessons(skillPathId: number, completedLessons: number[]) {
+  Cookies.set(`completedLessons_${skillPathId}`, JSON.stringify(completedLessons));
+}
+
+export function getCompletedLessons(skillPathId: number): number[] {
+  const data = Cookies.get(`completedLessons_${skillPathId}`);
+  return data ? JSON.parse(data) : [];
+}
+
+export function setCompletedQuizzes(skillPathId: number, completedQuizzes: number[]) {
+  Cookies.set(`completedQuizzes_${skillPathId}`, JSON.stringify(completedQuizzes));
+}
+
+export function getCompletedQuizzes(skillPathId: number): number[] {
+  const data = Cookies.get(`completedQuizzes_${skillPathId}`);
+  return data ? JSON.parse(data) : [];
+}
+
 export function clearCookies() {
   Cookies.remove("skillPathId");
   Cookies.remove("courseId");
