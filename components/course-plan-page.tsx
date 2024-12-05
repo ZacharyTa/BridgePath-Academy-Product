@@ -80,6 +80,7 @@ export const CoursePlanPageComponent: React.FC<
   }, [lessons, currentLessonIndexParam, onSelectLesson]);
 
   const handleLessonComplete = () => {
+    console.log("Lesson completed");
     const updatedLessons = [...currentCourse.lessons];
     updatedLessons[currentLessonIndex].completed = true;
 

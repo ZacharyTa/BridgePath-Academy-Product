@@ -16,6 +16,7 @@ export default function VideoPlayer({
 
   const handleVideoEnd = () => {
     setIsCompleted(true);
+    onComplete();
     if (playerRef.current) {
       playerRef.current.seekTo(0); // Seek to the beginning of the video
       playerRef.current.getInternalPlayer().stopVideo(); // Stops video to prevent related videos from playing
