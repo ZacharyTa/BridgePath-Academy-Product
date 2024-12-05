@@ -46,6 +46,15 @@ export function getCompletedQuizzes(skillPathId: number): number[] {
   return data ? JSON.parse(data) : [];
 }
 
+export function setSubscription(subscription: string) {
+  Cookies.set(`subscription`, subscription.toString());
+}
+
+export function getSubscription(): string {
+  const data = Cookies.get(`subscription`);
+  return data ? data.toString(): null;
+}
+
 export function clearCookies() {
   Cookies.remove("skillPathId");
   Cookies.remove("courseId");
