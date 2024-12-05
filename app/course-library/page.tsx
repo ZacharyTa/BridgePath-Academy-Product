@@ -58,7 +58,7 @@ export default async function CourseLibraryPage() {
                 jobCategory="Marketing"
                 includesCertificate={true}
                 includesProject={true}
-                hasAccess={skillPath.has_access}
+                requiredSubscriptionLevel={skillPath.requiredSubscriptionLevel}
               />
             </div>
           ))}

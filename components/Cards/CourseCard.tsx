@@ -15,10 +15,12 @@ import {
   setCourseId,
   setUserLessonId,
   setSkillPathId,
+  getSubscription,
 } from "@/helper/useCookies";
 
 interface CourseCardProps {
   id: number;
+  requiredSubscriptionLevel?: "Free" | "Basic" | "Advanced";
   label?: "Skill Path" | "Free Course";
   title?: string;
   description?: string;
@@ -28,12 +30,12 @@ interface CourseCardProps {
   jobCategory?: string;
   includesCertificate?: boolean;
   includesProject?: boolean;
-  hasAccess?: boolean;
 }
 
 export default function CourseCard({
   id,
   label = "Skill Path",
+  requiredSubscriptionLevel = "Free",
   title = "Web Development",
   description = "Learn the fundamentals of web development, including HTML, CSS, and JavaScript.",
   difficulty = "Beginner",
@@ -42,9 +44,21 @@ export default function CourseCard({
   jobCategory = "Technology",
   includesCertificate = true,
   includesProject = true,
-  hasAccess = true,
 }: CourseCardProps) {
   const router = useRouter();
+  const userSubscription = (getSubscription() || "Free") as
+    | "Free"
+    | "Basic"
+    | "Advanced";
+  const subscriptionLevels = {
+    Free: 0,
+    Basic: 1,
+    Advanced: 2,
+  };
+  const hasAccess =
+    subscriptionLevels[userSubscription] >=
+    subscriptionLevels[requiredSubscriptionLevel];
+
   const difficultyPercentage = {
     Beginner: "33%",
     Intermediate: "66%",
@@ -52,23 +66,44 @@ export default function CourseCard({
   };
 
   const handleClick = () => {
-    setSkillPathId(id);
-    setUserLessonId(0);
-    setCourseId(0);
-    router.push("/progress-overview");
+    if (hasAccess) {
+      setSkillPathId(id);
+      setUserLessonId(0);
+      setCourseId(0);
+      router.push("/progress-overview");
+    } else {
+      router.push("/subscription");
+    }
   };
 
   return (
     <Card className="relative w-full max-w-sm overflow-hidden transition-shadow duration-300 hover:shadow-lg dark:border-strokedark dark:bg-boxdark">
       {!hasAccess && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-25 dark:bg-opacity-50">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black bg-opacity-25 dark:bg-opacity-50">
           <Lock className="h-12 w-12 text-white" />
+          <button
+            className="btn btn-md mt-4 transform bg-secondary text-white duration-100 hover:scale-105 hover:bg-whiten hover:text-black hover:shadow-lg hover:shadow-meta-6"
+            onClick={() => router.push("/subscription")}
+          >
+            Upgrade
+          </button>
         </div>
       )}
       <CardHeader className="p-0">
         <div className="relative h-48 bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-800 dark:to-purple-900">
           <div className="dark:bg-gray-800 absolute left-4 top-4 rounded-md border border-primary/20 bg-white px-3 py-1.5 text-sm font-bold text-primary shadow-md">
             {label}
+          </div>
+          <div
+            className={`absolute right-4 top-4 rounded-md border px-3 py-1.5 text-sm font-bold shadow-md ${
+              requiredSubscriptionLevel === "Free"
+                ? "dark:bg-gray-800 border-primary/20 bg-white text-primary"
+                : requiredSubscriptionLevel === "Basic"
+                  ? "shadow-[0 0 10px rgba(255, 215, 0, 0.5)] border-none bg-base-100 text-[#FFD700]"
+                  : "shadow-0 0 10px rgba(255, 215, 0, 0.5) border-none bg-[#FFD700] text-purple-500 shadow-lg"
+            }`}
+          >
+            {requiredSubscriptionLevel}
           </div>
         </div>
       </CardHeader>
@@ -142,7 +177,7 @@ export default function CourseCard({
             className="hover:bg-primary-dark dark:hover:bg-primary-dark h-10 bg-primary px-6 text-white transition-all duration-300 hover:shadow-md"
             onClick={handleClick}
           >
-            Start Learning
+            {hasAccess ? "Start Learning" : "Upgrade"}
           </Button>
         </div>
       </CardContent>

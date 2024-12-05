@@ -49,6 +49,7 @@ export interface Course {
 // -- Skill Paths --
 export interface SkillPath {
   id: number;
+  requiredSubscriptionLevel : "Free" | "Basic" | "Advanced";
   title: string;
   description: string;
   difficulty_level: "Beginner" | "Intermediate" | "Advanced";

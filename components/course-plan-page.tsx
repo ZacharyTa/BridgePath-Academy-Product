@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
 import QuizContainer from "@/components/Course/QuizContainer";
@@ -17,6 +17,7 @@ import {
   setCompletedLessons,
   getCompletedLessons,
   getSkillPathId,
+  getSubscription,
 } from "@/helper/useCookies";
 
 interface CoursePlanPageComponentProps {
@@ -80,7 +81,6 @@ export const CoursePlanPageComponent: React.FC<
   }, [lessons, currentLessonIndexParam, onSelectLesson]);
 
   const handleLessonComplete = () => {
-    console.log("Lesson completed");
     const updatedLessons = [...currentCourse.lessons];
     updatedLessons[currentLessonIndex].completed = true;
 

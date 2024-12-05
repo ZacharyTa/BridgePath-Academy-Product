@@ -4,6 +4,7 @@ const skillPaths: SkillPath[] = [
   {
     id: 1,
     title: "Introduction to Digital Marketing",
+    requiredSubscriptionLevel: "Free",
     description: "Learn the basics of digital marketing strategies.",
     difficulty_level: "Beginner",
     duration: 3,
@@ -65,6 +66,7 @@ const skillPaths: SkillPath[] = [
   },
   {
     id: 2,
+    requiredSubscriptionLevel: "Advanced",
     title: "Advanced Digital Marketing",
     description: "Master advanced digital marketing strategies.",
     difficulty_level: "Advanced",
@@ -122,6 +124,7 @@ const skillPaths: SkillPath[] = [
   },
   {
     id: 3,
+    requiredSubscriptionLevel: "Basic",
     title: "Introduction to Zapier",
     description: "Master social media platforms for business growth.",
     difficulty_level: "Beginner",
@@ -327,6 +330,7 @@ const skillPaths: SkillPath[] = [
   },
   {
     id: 4,
+    requiredSubscriptionLevel: "Basic",
     title: "Email Marketing",
     description: "Automate your email marketing campaigns.",
     difficulty_level: "Intermediate",
@@ -384,6 +388,7 @@ const skillPaths: SkillPath[] = [
   },
   {
     id: 5,
+    requiredSubscriptionLevel: "Free",
     title: "Content Marketing",
     description: "Create and distribute valuable content.",
     difficulty_level: "Beginner",
