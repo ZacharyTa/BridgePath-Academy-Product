@@ -6,12 +6,17 @@ import { useRouter } from "next/navigation";
 
 export default function ObtainCertPage() {
   const [showConfetti, setShowConfetti] = useState(true);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const router = useRouter();
 
   useEffect(() => {
+    // Update dimensions on mount (client-side only)
+    setDimensions({ width: window.innerWidth, height: window.innerHeight });
+
+    // Stop confetti after 10 seconds
     const timer = setTimeout(() => {
       setShowConfetti(false);
-    }, 10000); // Stop confetti after 5 seconds
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -29,7 +34,7 @@ export default function ObtainCertPage() {
     <>
       {showConfetti && (
         <div className="pointer-events-none fixed inset-0 z-50">
-          <Confetti width={window.innerWidth} height={window.innerHeight} />
+          <Confetti width={dimensions.width} height={dimensions.height} />
         </div>
       )}
       <div className="bg-gray-100 flex min-h-screen flex-col items-center justify-center p-4">
