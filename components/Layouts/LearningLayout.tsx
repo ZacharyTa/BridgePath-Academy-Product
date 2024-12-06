@@ -5,7 +5,7 @@ import Header from "@/components/Header/index";
 import { CoursePlanPageComponent } from "@/components/course-plan-page";
 import { Course } from "@/libs/types";
 import skillPaths from "@/skillPaths";
-import { getCourseId, getLessonId } from "@/helper/useCookies";
+import { getCourseId, getUserLessonId } from "@/helper/useCookies";
 
 export default function LearningLayout({
   children,

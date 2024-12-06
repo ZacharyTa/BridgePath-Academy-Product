@@ -12,13 +12,13 @@ import {
 interface QuizContainerProps {
   quizzes: Quiz[];
   lessonId: number;
-  onComplete: () => void;
+  onQuizComplete: () => void;
 }
 
 const QuizContainer: React.FC<QuizContainerProps> = ({
   quizzes,
   lessonId,
-  onComplete,
+  onQuizComplete,
 }) => {
   // State variables
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
@@ -80,8 +80,11 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
           ]);
         }
         setIsQuizCompleted(true);
-        // Optional: Call onComplete if needed
-        // onComplete();
+
+        // Check if all quizzes are completed
+        if (currentQuizIndex === quizzes.length - 1) {
+          onQuizComplete();
+        }
       }
     }
   };
@@ -101,9 +104,6 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
     if (currentQuizIndex < quizzes.length - 1) {
       setCurrentQuizIndex(currentQuizIndex + 1);
       setCurrentQuestionIndex(0);
-    } else {
-      // All quizzes completed
-      onComplete();
     }
   };
 

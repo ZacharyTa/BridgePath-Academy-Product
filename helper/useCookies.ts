@@ -46,6 +46,15 @@ export function getCompletedQuizzes(skillPathId: number): number[] {
   return data ? JSON.parse(data) : [];
 }
 
+export function setCompletedVideos(skillPathId: number, completedVideos: number[]) {
+  Cookies.set(`completedVideos_${skillPathId}`, JSON.stringify(completedVideos));
+}
+
+export function getCompletedVideos(skillPathId: number): number[] {
+  const data = Cookies.get(`completedVideos_${skillPathId}`);
+  return data ? JSON.parse(data) : [];
+}
+
 export function setSubscription(subscription: string) {
   Cookies.set(`subscription`, subscription.toString());
 }

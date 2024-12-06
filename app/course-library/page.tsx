@@ -9,30 +9,6 @@ import { CourseLibrary } from "@/components/CourseLibrary";
 import CourseCard from "@/components/Cards/CourseCard";
 import skillPaths from "@/skillPaths";
 
-// interface CourseCardProps {
-//   label?: "Skill Path" | "Free Course";
-//   title?: string;
-//   description?: string;
-//   difficulty?: "Beginner" | "Intermediate" | "Advanced";
-//   duration?: string;
-//   courseCount?: number;
-//   jobCategory?: string;
-//   includesCertificate?: boolean;
-//   includesProject?: boolean;
-// }
-
-// export default function CourseCard({
-//   label = "Skill Path",
-//   title = "Web Development",
-//   description = "Learn the fundamentals of web development, including HTML, CSS, and JavaScript.",
-//   difficulty = "Beginner",
-//   duration = "40 Hours",
-//   courseCount = 9,
-//   jobCategory = "Technology",
-//   includesCertificate = true,
-//   includesProject = true,
-// }}
-
 // This is a private page: It's protected by the layout.js component which ensures the user is authenticated.
 // It's a server compoment which means you can fetch data (like the user profile) before the page is rendered.
 export default async function CourseLibraryPage() {

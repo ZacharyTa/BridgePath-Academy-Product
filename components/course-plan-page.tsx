@@ -16,6 +16,8 @@ import {
   getUserLessonId,
   setCompletedLessons,
   getCompletedLessons,
+  getCompletedVideos,
+  getCompletedQuizzes,
   getSkillPathId,
   getSubscription,
 } from "@/helper/useCookies";
@@ -38,7 +40,9 @@ export const CoursePlanPageComponent: React.FC<
   const [currentLessonIndex, setCurrentLessonIndex] = useState(
     currentLessonIndexParam,
   );
-  const skillPathId = getSkillPathId();
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const skillPathId = getSkillPathId() || 0;
 
   useEffect(() => {
     // Get lesson ID from cookies
@@ -79,6 +83,50 @@ export const CoursePlanPageComponent: React.FC<
       progress,
     }));
   }, [lessons, currentLessonIndexParam, onSelectLesson]);
+
+  useEffect(() => {
+    // Reset completion states
+    setIsVideoCompleted(false);
+    setIsQuizCompleted(false);
+
+    const completedVideos = getCompletedVideos(skillPathId) || [];
+    if (
+      completedVideos.includes(currentCourse.lessons[currentLessonIndex].id)
+    ) {
+      setIsVideoCompleted(true);
+    }
+
+    const completedQuizzes = getCompletedQuizzes(skillPathId) || [];
+    const currentQuizIds =
+      currentCourse.lessons[currentLessonIndex].video.quiz.map((q) => q.id) ||
+      [];
+
+    if (currentQuizIds.every((id: number) => completedQuizzes.includes(id))) {
+      setIsQuizCompleted(true);
+    }
+
+    checkLessonCompletion();
+  }, [currentLessonIndex]);
+
+  const handleVideoComplete = () => {
+    setIsVideoCompleted(true);
+    checkLessonCompletion();
+  };
+
+  const handleQuizComplete = () => {
+    setIsQuizCompleted(true);
+    checkLessonCompletion();
+  };
+
+  const checkLessonCompletion = () => {
+    const currentLesson = currentCourse.lessons[currentLessonIndex];
+    const hasQuiz =
+      currentLesson.video.quiz && currentLesson.video.quiz.length > 0;
+
+    if (isVideoCompleted && (!hasQuiz || isQuizCompleted)) {
+      handleLessonComplete();
+    }
+  };
 
   const handleLessonComplete = () => {
     const updatedLessons = [...currentCourse.lessons];
@@ -166,7 +214,8 @@ export const CoursePlanPageComponent: React.FC<
                     videoUrl={
                       currentCourse.lessons[currentLessonIndex].video.url
                     }
-                    onComplete={handleLessonComplete}
+                    lessonId={currentCourse.lessons[currentLessonIndex].id}
+                    onVideoComplete={handleVideoComplete}
                   />
                 </TabsContent>
                 <TabsContent
@@ -192,7 +241,7 @@ export const CoursePlanPageComponent: React.FC<
             <QuizContainer
               quizzes={currentCourse.lessons[currentLessonIndex].video.quiz}
               lessonId={currentCourse.lessons[currentLessonIndex].id}
-              onComplete={handleLessonComplete}
+              onQuizComplete={handleQuizComplete}
             />
           </Card>
         </div>
@@ -217,3 +266,18 @@ export const CoursePlanPageComponent: React.FC<
     </div>
   );
 };
+
+// TODO
+// Completed Course/Lessons logic almost completed. Need to:
+// 1. Format to save into cookies, completedQuizzes_[skillpath]_[courseid]_[lessonid].
+//     - (maybe use cookies, getLessonID, getCourseID, getSkillPathID? Im scared it will ruin some other code logic in other files),
+// 2. Change Progress in main skilklpath layout page thing and progress in course learning layout to reflect correct progress values.
+// 3. Create helper file to easily obtain users progress for the progress path later on!...
+// This should compelte
+//  - Progress Page
+// Last things to implement are:
+// - Certifications (easy, takes one day)
+// - Projects (easy, takes one day)
+// - User Profile (easy, takes one day) Shows user progress, certifications, projects, subscription, ButtonAccount.tsx
+// - Stripe payment and Student & Corporate Clients(Just show skeleton: "Coming soon") (easy, takes one day)
+// estimated time to complete: 4 days

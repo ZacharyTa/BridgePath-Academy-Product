@@ -1,22 +1,35 @@
 import { useState, useRef } from "react";
 import ReactPlayer from "react-player/youtube";
-import { Button } from "@/components/ui/button";
+import {
+  getSkillPathId,
+  setCompletedVideos,
+  getCompletedVideos,
+} from "@/helper/useCookies";
 
 interface VideoPlayerProps {
   videoUrl: string;
-  onComplete: () => void;
+  lessonId: number;
+  onVideoComplete: () => void;
 }
 
 export default function VideoPlayer({
   videoUrl,
-  onComplete,
+  lessonId,
+  onVideoComplete,
 }: VideoPlayerProps) {
   const [isCompleted, setIsCompleted] = useState(false);
   const playerRef = useRef<ReactPlayer>(null);
+  const skillPathId = getSkillPathId() || 0;
 
   const handleVideoEnd = () => {
     setIsCompleted(true);
-    onComplete();
+    // Save to completedVideos
+    const completedVideos = getCompletedVideos(skillPathId) || [];
+    if (!completedVideos.includes(lessonId)) {
+      setCompletedVideos(skillPathId, [...completedVideos, lessonId]);
+    }
+
+    onVideoComplete();
     if (playerRef.current) {
       playerRef.current.seekTo(0); // Seek to the beginning of the video
       playerRef.current.getInternalPlayer().stopVideo(); // Stops video to prevent related videos from playing
