@@ -89,7 +89,26 @@ export function getCompletedVideos(
   );
 }
 
-// New Cookies doesn't work with code, I need to sit down and think about how to structure this
+export function setCertificationStatus(skillPathId: number, status: boolean) {
+  Cookies.set(`certificationStatus_${skillPathId}`, status.toString());
+}
+
+export function getCertificationStatus(skillPathId: number): boolean {
+  const status = Cookies.get(`certificationStatus_${skillPathId}`);
+  return status === "true";
+}
+
+export function setCertificationVerified(
+  skillPathId: number,
+  verified: boolean,
+) {
+  Cookies.set(`certificationVerified_${skillPathId}`, verified.toString());
+}
+
+export function getCertificationVerified(skillPathId: number): boolean {
+  const verified = Cookies.get(`certificationVerified_${skillPathId}`);
+  return verified === "true";
+}
 
 export function setSubscription(subscription: string) {
   Cookies.set(`subscription`, subscription.toString());
@@ -98,6 +117,14 @@ export function setSubscription(subscription: string) {
 export function getSubscription(): string {
   const data = Cookies.get(`subscription`);
   return data ? data.toString() : null;
+}
+
+export function setCertificationId(skillPathId: number, certId: string) {
+  Cookies.set(`certificationId_${skillPathId}`, certId);
+}
+
+export function getCertificationId(skillPathId: number): string | null {
+  return Cookies.get(`certificationId_${skillPathId}`);
 }
 
 export function clearCookies() {

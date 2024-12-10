@@ -17,6 +17,8 @@ import {
   getSkillPathId,
   setCourseId,
   getCompletedLessons,
+  setCertificationStatus,
+  getCertificationStatus,
 } from "@/helper/useCookies";
 
 import { getUserProgress } from "@/helper/progressStorage";
@@ -24,6 +26,7 @@ import {
   getSkillPathCompletionPercent,
   getCourseCompletionPercent,
 } from "@/helper/progressHelpers";
+import RedeemCertCard from "@/components/Cards/ReedemCertCard";
 
 interface Course {
   id: number;
@@ -49,6 +52,7 @@ interface SkillPathProps {
 export default function SkillPathPage() {
   const router = useRouter();
   const [skillPath, setSkillPath] = useState<SkillPathProps | null>(null);
+  const [showCertification, setShowCertification] = useState(false);
 
   useEffect(() => {
     const skillPathId = getSkillPathId();
@@ -87,6 +91,10 @@ export default function SkillPathPage() {
           };
         }),
       });
+
+      if (overallProgress === 100 && !getCertificationStatus(skillPathId)) {
+        setShowCertification(true);
+      }
     } else {
       router.push("/course-library");
     }
@@ -104,6 +112,8 @@ export default function SkillPathPage() {
           {Math.round(skillPath.overallProgress)}% Completed
         </p>
       </div>
+
+      {showCertification && <RedeemCertCard />}
 
       <div className="grid gap-8 md:grid-cols-3">
         <div className="md:col-span-2">

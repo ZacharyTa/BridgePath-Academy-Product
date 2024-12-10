@@ -42,6 +42,8 @@ export const CoursePlanPageComponent: React.FC<
   const skillPathId = getSkillPathId() || 0;
   const courseId = getCourseId() || 0;
 
+  const router = useRouter();
+
   useEffect(() => {
     // Get lesson ID from cookies
     const lessonId = getUserLessonId();
@@ -109,6 +111,9 @@ export const CoursePlanPageComponent: React.FC<
       setUserLessonId(lessons[nextLessonIndex].id);
       setCurrentLessonIndex(nextLessonIndex);
       onSelectLesson(nextLessonIndex);
+    } else if (currentLessonIndex === lessons.length - 1) {
+      // Redirect to progress overview page
+      router.push("/progress-overview");
     }
   };
 
@@ -200,16 +205,24 @@ export const CoursePlanPageComponent: React.FC<
         <Button
           onClick={handlePreviousLesson}
           disabled={currentLessonIndex === 0}
-          className="dark:hover:bg-primary-dark px-6 py-3 transition-transform hover:scale-105 hover:shadow-md dark:bg-primary dark:text-white"
+          className="dark:hover:bg-primary-dark dark:bg-primarytext-white px-6 py-3 transition-transform hover:scale-105 hover:shadow-md"
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Previous Lesson
         </Button>
         <Button
           onClick={handleNextLesson}
-          disabled={currentLessonIndex === lessons.length - 1}
-          className="dark:hover:bg-primary-dark px-6 py-3 transition-transform hover:scale-105 hover:shadow-md dark:bg-primary dark:text-white"
+          disabled={currentLessonIndex === lessons.length}
+          className="dark:hover:bg-primary-dark px-6 py-3 text-white transition-transform hover:scale-105 hover:shadow-md dark:bg-primary"
         >
-          Next Lesson <ArrowRight className="ml-2 h-4 w-4" />
+          {currentLessonIndex === lessons.length - 1 ? (
+            <>
+              Finish <CheckCircle className="ml-2 h-4 w-4 text-success" />
+            </>
+          ) : (
+            <>
+              Next Lesson <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>

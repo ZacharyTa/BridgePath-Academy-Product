@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import Logo from "@/public/icons/icon.png";
 import { CertificateProps } from "@/libs/types";
+import { getSkillPathId, getCertificationId } from "@/helper/useCookies";
 
 export function Certificate({
   certificationName,
@@ -16,6 +17,9 @@ export function Certificate({
   skills,
   hasProject,
 }: CertificateProps) {
+  const skillPathId = getSkillPathId();
+  const certId = skillPathId ? getCertificationId(skillPathId) : null;
+
   return (
     <Card className="mx-auto w-full max-w-3xl bg-white shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -49,6 +53,12 @@ export function Certificate({
               ))}
             </div>
           </div>
+          {certId && (
+            <div>
+              <p className="mb-2 text-sm font-medium">Certification ID:</p>
+              <p className="text-lg font-bold">{certId}</p>
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
