@@ -83,7 +83,7 @@ export default function CourseCard({
           <Lock className="h-12 w-12 text-white" />
           <button
             className="btn btn-md mt-4 transform bg-secondary text-white duration-100 hover:scale-105 hover:bg-whiten hover:text-black hover:shadow-lg hover:shadow-meta-6"
-            onClick={() => router.push("/subscription")}
+            onClick={() => router.push("/subscription?callback=course-library")}
           >
             Upgrade
           </button>

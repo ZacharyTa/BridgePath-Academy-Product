@@ -45,7 +45,6 @@ export function markQuizCompleted(
   quizId: number,
 ) {
   const progress = getUserProgress();
-  // similar logic to ensure keys exist, then push quizId if not already completed
   const lesson = ensureLesson(progress, skillPathId, courseId, lessonId);
   if (!lesson.quizzesCompleted.includes(quizId)) {
     lesson.quizzesCompleted.push(quizId);

@@ -2,8 +2,10 @@
 // import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 // import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import HomeLayout from "@/components/Layouts/HomeLayout";
+// import HomeLayout from "@/components/Layouts/HomeLayout";
 import { AppProvider } from "@/context/AppContext";
+import StartedSkillPaths from "@/components/Dashboard/StartedSkillPaths";
+import StreakCard from "@/components/Cards/StreakCard";
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
@@ -15,7 +17,9 @@ export default async function Dashboard() {
   return (
     <AppProvider>
       <DefaultLayout>
-        <HomeLayout />
+        {/* <HomeLayout /> */}
+        <StreakCard />
+        <StartedSkillPaths />
       </DefaultLayout>
     </AppProvider>
   );
