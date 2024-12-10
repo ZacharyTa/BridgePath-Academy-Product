@@ -1,4 +1,4 @@
-import { SkillPath } from '@/libs/types';
+import { SkillPath } from "@/libs/types";
 
 const skillPaths: SkillPath[] = [
   {
@@ -14,12 +14,10 @@ const skillPaths: SkillPath[] = [
         id: 1,
         title: "SEO Basics",
         description: "Learn the basics of SEO",
-        progress: 0,
         lessons: [
           {
             id: 1,
             title: "What is SEO?",
-            completed: false,
             video: {
               title: "What is SEO?",
               url: "https://www.youtube.com/watch?v=0eDyZfY8h4Q",
@@ -77,12 +75,10 @@ const skillPaths: SkillPath[] = [
         id: 2,
         title: "Advanced SEO Techniques",
         description: "Learn advanced SEO techniques",
-        progress: 0,
         lessons: [
           {
             id: 2,
             title: "On-Page SEO",
-            completed: false,
             video: {
               title: "On-Page SEO",
               url: "https://www.youtube.com/watch?v=example9",
@@ -135,12 +131,10 @@ const skillPaths: SkillPath[] = [
         id: 3,
         title: "Zapier 101",
         description: "Learn the basics of social media marketing",
-        progress: 0,
         lessons: [
           {
             id: 1,
             title: "Getting Started",
-            completed: false,
             video: {
               title: "Zapier 101",
               url: "https://youtu.be/PZyXBkn9lnI",
@@ -155,7 +149,6 @@ const skillPaths: SkillPath[] = [
           {
             id: 2,
             title: "Zapier Episode 1",
-            completed: false,
             video: {
               title: "Zapier Episode 1",
               url: "https://youtu.be/KP1T2QPfKoI",
@@ -165,21 +158,24 @@ const skillPaths: SkillPath[] = [
                   questions: [
                     {
                       id: 1,
-                      question_text: "Where can you go to set-up your first Zap?",
+                      question_text:
+                        "Where can you go to set-up your first Zap?",
                       options: [
                         {
                           id: 1,
-                          option_text: "Homepage under \"Start from scratch\"",
+                          option_text: 'Homepage under "Start from scratch"',
                           is_correct: false,
                         },
                         {
                           id: 2,
-                          option_text: "Left-hand sidebar anywhere on the website",
+                          option_text:
+                            "Left-hand sidebar anywhere on the website",
                           is_correct: false,
                         },
                         {
                           id: 3,
-                          option_text: "\"Create\" in the top-left side on the homepage",
+                          option_text:
+                            '"Create" in the top-left side on the homepage',
                           is_correct: false,
                         },
                         {
@@ -198,7 +194,6 @@ const skillPaths: SkillPath[] = [
           {
             id: 3,
             title: "Zapier Episode 2",
-            completed: false,
             video: {
               title: "Zapier Episode 2",
               url: "https://youtu.be/Y_Nwe9hJOww",
@@ -208,11 +203,13 @@ const skillPaths: SkillPath[] = [
                   questions: [
                     {
                       id: 2,
-                      question_text: "What is the purpose of a filter in Zapier?",
+                      question_text:
+                        "What is the purpose of a filter in Zapier?",
                       options: [
                         {
                           id: 5,
-                          option_text: "To allow tasks to proceed only when certain conditions are met.",
+                          option_text:
+                            "To allow tasks to proceed only when certain conditions are met.",
                           is_correct: true,
                         },
                         {
@@ -222,12 +219,14 @@ const skillPaths: SkillPath[] = [
                         },
                         {
                           id: 7,
-                          option_text: "To add delays between actions in a workflow.",
+                          option_text:
+                            "To add delays between actions in a workflow.",
                           is_correct: false,
                         },
                         {
                           id: 8,
-                          option_text: "To organize Zaps into different folders.",
+                          option_text:
+                            "To organize Zaps into different folders.",
                           is_correct: false,
                         },
                       ],
@@ -241,7 +240,6 @@ const skillPaths: SkillPath[] = [
           {
             id: 4,
             title: "Zapier Episode 3",
-            completed: false,
             video: {
               title: "Zapier Episode 3",
               url: "https://youtu.be/ZqtSW-LMhcE",
@@ -251,26 +249,31 @@ const skillPaths: SkillPath[] = [
                   questions: [
                     {
                       id: 3,
-                      question_text: "How did we find \"YouTube\" when we set up our Trigger?",
+                      question_text:
+                        'How did we find "YouTube" when we set up our Trigger?',
                       options: [
                         {
                           id: 9,
-                          option_text: "By searching for it in the app search bar.",
+                          option_text:
+                            "By searching for it in the app search bar.",
                           is_correct: true,
                         },
                         {
                           id: 10,
-                          option_text: "By typing it directly into the Zap action field.",
+                          option_text:
+                            "By typing it directly into the Zap action field.",
                           is_correct: false,
                         },
                         {
                           id: 11,
-                          option_text: "By selecting it from a dropdown menu of pre-integrated apps.",
+                          option_text:
+                            "By selecting it from a dropdown menu of pre-integrated apps.",
                           is_correct: false,
                         },
                         {
                           id: 12,
-                          option_text: "By adding it manually through the API connection settings.",
+                          option_text:
+                            "By adding it manually through the API connection settings.",
                           is_correct: false,
                         },
                       ],
@@ -284,7 +287,6 @@ const skillPaths: SkillPath[] = [
           {
             id: 5,
             title: "Zapier Episode 4",
-            completed: false,
             video: {
               title: "Zapier Episode 4",
               url: "https://youtu.be/UULL5eRTlEQ",
@@ -298,22 +300,26 @@ const skillPaths: SkillPath[] = [
                       options: [
                         {
                           id: 13,
-                          option_text: "A data visualization tool integrated into the chatbot interface.",
+                          option_text:
+                            "A data visualization tool integrated into the chatbot interface.",
                           is_correct: false,
                         },
                         {
                           id: 14,
-                          option_text: "A repository of information that a chatbot uses to provide answers or perform tasks.",
+                          option_text:
+                            "A repository of information that a chatbot uses to provide answers or perform tasks.",
                           is_correct: true,
                         },
                         {
                           id: 15,
-                          option_text: "A feature that allows chatbots to translate languages in real time.",
+                          option_text:
+                            "A feature that allows chatbots to translate languages in real time.",
                           is_correct: false,
                         },
                         {
                           id: 16,
-                          option_text: "A plugin used to train chatbots for natural language understanding.",
+                          option_text:
+                            "A plugin used to train chatbots for natural language understanding.",
                           is_correct: false,
                         },
                       ],
@@ -341,12 +347,10 @@ const skillPaths: SkillPath[] = [
         id: 4,
         title: "Email Marketing Basics",
         description: "Learn the basics of email marketing",
-        progress: 0,
         lessons: [
           {
             id: 4,
             title: "Introduction to Email Marketing",
-            completed: false,
             video: {
               title: "Introduction to Email Marketing",
               url: "https://www.youtube.com/watch?v=example11",
@@ -356,7 +360,8 @@ const skillPaths: SkillPath[] = [
                   questions: [
                     {
                       id: 4,
-                      question_text: "What is the primary goal of email marketing?",
+                      question_text:
+                        "What is the primary goal of email marketing?",
                       options: [
                         {
                           id: 8,
@@ -399,12 +404,10 @@ const skillPaths: SkillPath[] = [
         id: 5,
         title: "Content Marketing Basics",
         description: "Learn the basics of content marketing",
-        progress: 0,
         lessons: [
           {
             id: 5,
             title: "Introduction to Content Marketing",
-            completed: false,
             video: {
               title: "Introduction to Content Marketing",
               url: "https://www.youtube.com/watch?v=example12",
@@ -414,7 +417,8 @@ const skillPaths: SkillPath[] = [
                   questions: [
                     {
                       id: 5,
-                      question_text: "What is the primary goal of content marketing?",
+                      question_text:
+                        "What is the primary goal of content marketing?",
                       options: [
                         {
                           id: 10,
@@ -435,7 +439,8 @@ const skillPaths: SkillPath[] = [
             resources: [
               {
                 id: 5,
-                resource_link: "https://www.example.com/content-marketing-basics",
+                resource_link:
+                  "https://www.example.com/content-marketing-basics",
                 resource_type: "article",
               },
             ],

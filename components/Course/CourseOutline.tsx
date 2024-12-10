@@ -1,10 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Lock } from "lucide-react";
 import ClickOutside from "@/components/ClickOutside";
 import { Lesson } from "@/libs/types";
-import { setUserLessonId } from "@/helper/useCookies";
+import {
+  setUserLessonId,
+  getSkillPathId,
+  getCourseId,
+} from "@/helper/useCookies";
+import { getUserProgress } from "@/helper/progressStorage";
+import { isLessonCompleted } from "@/helper/progressHelpers";
 
 interface CourseOutlineProps {
   lessons: Lesson[];
@@ -18,6 +24,18 @@ export default function CourseOutline({
   onSelectLesson,
 }: CourseOutlineProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [completedLessons, setCompletedLessons] = useState<boolean[]>([]);
+
+  const skillPathId = getSkillPathId() || 0;
+  const courseId = getCourseId() || 0;
+
+  useEffect(() => {
+    const userProgress = getUserProgress();
+    const completedStatus = lessons.map((lesson) =>
+      isLessonCompleted(skillPathId, courseId, lesson.id, userProgress),
+    );
+    setCompletedLessons(completedStatus);
+  }, [lessons, skillPathId, courseId]);
 
   const handleLessonClick = (index: number) => {
     setUserLessonId(lessons[index].id);
@@ -80,9 +98,11 @@ export default function CourseOutline({
                   variant={index === currentLessonIndex ? "default" : "outline"}
                   className="w-full justify-start"
                   onClick={() => handleLessonClick(index)}
-                  disabled={!lesson.completed && index > currentLessonIndex}
+                  disabled={
+                    !completedLessons[index] && index > currentLessonIndex
+                  }
                 >
-                  {lesson.completed ? (
+                  {completedLessons[index] ? (
                     <CheckCircle
                       className="mr-2 h-4 w-4 text-green-500"
                       style={{ fontSize: "1.1rem" }}

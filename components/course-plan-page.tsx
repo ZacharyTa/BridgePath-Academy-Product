@@ -14,13 +14,16 @@ import { Course, Lesson } from "@/libs/types";
 import {
   setUserLessonId,
   getUserLessonId,
-  setCompletedLessons,
-  getCompletedLessons,
-  getCompletedVideos,
-  getCompletedQuizzes,
   getSkillPathId,
-  getSubscription,
+  getCourseId,
 } from "@/helper/useCookies";
+import { getUserProgress } from "@/helper/progressStorage";
+import {
+  markVideoCompleted,
+  markQuizCompleted,
+  getCourseCompletionPercent,
+  isLessonCompleted,
+} from "@/helper/progressHelpers";
 
 interface CoursePlanPageComponentProps {
   lessons: Lesson[];
@@ -31,18 +34,13 @@ interface CoursePlanPageComponentProps {
 export const CoursePlanPageComponent: React.FC<
   CoursePlanPageComponentProps
 > = ({ lessons, currentLessonIndexParam, onSelectLesson }) => {
-  const [currentCourse, setCurrentCourse] = useState<Course>({
-    id: lessons[currentLessonIndexParam].id,
-    title: lessons[currentLessonIndexParam].video.title,
-    lessons: lessons,
-    progress: 0,
-  });
   const [currentLessonIndex, setCurrentLessonIndex] = useState(
     currentLessonIndexParam,
   );
-  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
-  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const [courseProgress, setCourseProgress] = useState(0);
+
   const skillPathId = getSkillPathId() || 0;
+  const courseId = getCourseId() || 0;
 
   useEffect(() => {
     // Get lesson ID from cookies
@@ -52,136 +50,89 @@ export const CoursePlanPageComponent: React.FC<
       if (lessonIndex !== -1) {
         setCurrentLessonIndex(lessonIndex);
         onSelectLesson(lessonIndex);
-        setCurrentCourse((prevCourse) => ({
-          ...prevCourse,
-          id: lessons[lessonIndex].id,
-          title: lessons[lessonIndex].video.title,
-        }));
       }
     } else {
-      // If no lesson ID in cookies, use the default
       setCurrentLessonIndex(currentLessonIndexParam);
     }
 
-    // Load completed lessons from cookies
-    const completedLessonIds = getCompletedLessons(skillPathId!) || [];
+    // Load user progress and calculate course completion percentage
+    const userProgress = getUserProgress();
+    const progressPercent = getCourseCompletionPercent(
+      skillPathId,
+      courseId,
+      userProgress,
+    );
+    console.log("progressPercent", progressPercent);
+    setCourseProgress(progressPercent);
 
-    const updatedLessons = lessons.map((lesson) => ({
-      ...lesson,
-      completed: completedLessonIds.includes(lesson.id),
-    }));
-
-    setCurrentCourse((prevCourse) => ({
-      ...prevCourse,
-      lessons: updatedLessons,
-    }));
-
-    // Calculate progress
-    const progress = (completedLessonIds.length / updatedLessons.length) * 100;
-    setCurrentCourse((prevCourse) => ({
-      ...prevCourse,
-      progress,
-    }));
-  }, [lessons, currentLessonIndexParam, onSelectLesson]);
-
-  useEffect(() => {
-    // Reset completion states
-    setIsVideoCompleted(false);
-    setIsQuizCompleted(false);
-
-    const completedVideos = getCompletedVideos(skillPathId) || [];
-    if (
-      completedVideos.includes(currentCourse.lessons[currentLessonIndex].id)
-    ) {
-      setIsVideoCompleted(true);
-    }
-
-    const completedQuizzes = getCompletedQuizzes(skillPathId) || [];
-    const currentQuizIds =
-      currentCourse.lessons[currentLessonIndex].video.quiz.map((q) => q.id) ||
-      [];
-
-    if (currentQuizIds.every((id: number) => completedQuizzes.includes(id))) {
-      setIsQuizCompleted(true);
-    }
-
-    checkLessonCompletion();
-  }, [currentLessonIndex]);
+    // Calculate lesson completion percentage
+    const lessonCompleted = isLessonCompleted(
+      skillPathId,
+      courseId,
+      lessons[currentLessonIndex].id,
+      userProgress,
+    );
+  }, [
+    lessons,
+    currentLessonIndexParam,
+    onSelectLesson,
+    skillPathId,
+    courseId,
+    currentLessonIndex,
+  ]);
 
   const handleVideoComplete = () => {
-    setIsVideoCompleted(true);
-    checkLessonCompletion();
+    const currentLessonId = lessons[currentLessonIndex].id;
+    markVideoCompleted(skillPathId, courseId, currentLessonId);
+    updateProgress();
   };
 
-  const handleQuizComplete = () => {
-    setIsQuizCompleted(true);
-    checkLessonCompletion();
+  const handleQuizComplete = (quizId: number) => {
+    const currentLessonId = lessons[currentLessonIndex].id;
+    markQuizCompleted(skillPathId, courseId, currentLessonId, quizId);
+    updateProgress();
   };
 
-  const checkLessonCompletion = () => {
-    const currentLesson = currentCourse.lessons[currentLessonIndex];
-    const hasQuiz =
-      currentLesson.video.quiz && currentLesson.video.quiz.length > 0;
-
-    if (isVideoCompleted && (!hasQuiz || isQuizCompleted)) {
-      handleLessonComplete();
-    }
-  };
-
-  const handleLessonComplete = () => {
-    const updatedLessons = [...currentCourse.lessons];
-    updatedLessons[currentLessonIndex].completed = true;
-
-    // Get the list of completed lesson IDs
-    const completedLessons = updatedLessons
-      .filter((lesson) => lesson.completed)
-      .map((lesson) => lesson.id);
-
-    // Save to cookies
-    setCompletedLessons(skillPathId!, completedLessons);
-
-    const progress = (completedLessons.length / updatedLessons.length) * 100;
-    setCurrentCourse({ ...currentCourse, lessons: updatedLessons, progress });
+  const updateProgress = () => {
+    const userProgress = getUserProgress();
+    const progressPercent = getCourseCompletionPercent(
+      skillPathId,
+      courseId,
+      userProgress,
+    );
+    setCourseProgress(progressPercent);
   };
 
   const handleNextLesson = () => {
-    if (currentLessonIndex < currentCourse.lessons.length - 1) {
+    if (currentLessonIndex < lessons.length - 1) {
       const nextLessonIndex = currentLessonIndex + 1;
-      setUserLessonId(currentCourse.lessons[nextLessonIndex].id);
+      setUserLessonId(lessons[nextLessonIndex].id);
       setCurrentLessonIndex(nextLessonIndex);
       onSelectLesson(nextLessonIndex);
-      setCurrentCourse({
-        ...currentCourse,
-        id: currentCourse.lessons[nextLessonIndex].id,
-        title: currentCourse.lessons[nextLessonIndex].video.title,
-      });
     }
   };
 
   const handlePreviousLesson = () => {
     if (currentLessonIndex > 0) {
       const prevLessonIndex = currentLessonIndex - 1;
-      setUserLessonId(currentCourse.lessons[prevLessonIndex].id);
+      setUserLessonId(lessons[prevLessonIndex].id);
       setCurrentLessonIndex(prevLessonIndex);
       onSelectLesson(prevLessonIndex);
-      setCurrentCourse({
-        ...currentCourse,
-        id: currentCourse.lessons[prevLessonIndex].id,
-        title: currentCourse.lessons[prevLessonIndex].video.title,
-      });
     }
   };
 
-  if (!currentCourse) {
+  if (!lessons || lessons.length === 0) {
     return <div>Loading...</div>;
   }
+
+  const currentLesson = lessons[currentLessonIndex];
 
   return (
     <div className="container mx-auto bg-white px-4 py-8 dark:bg-boxdark dark:text-bodydark">
       <CourseTitleHeader
-        title={currentCourse.title}
-        progress={currentCourse.progress}
-        details={`${currentLessonIndex + 1}/${currentCourse.lessons.length} lessons completed`}
+        title={currentLesson.title}
+        progress={courseProgress}
+        details={`${currentLessonIndex + 1}/${lessons.length} lessons completed`}
       />
 
       <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -211,10 +162,8 @@ export const CoursePlanPageComponent: React.FC<
                   className="dark:bg-boxdark dark:text-bodydark"
                 >
                   <VideoPlayer
-                    videoUrl={
-                      currentCourse.lessons[currentLessonIndex].video.url
-                    }
-                    lessonId={currentCourse.lessons[currentLessonIndex].id}
+                    videoUrl={currentLesson.video.url}
+                    lessonId={currentLesson.id}
                     onVideoComplete={handleVideoComplete}
                   />
                 </TabsContent>
@@ -239,8 +188,8 @@ export const CoursePlanPageComponent: React.FC<
 
           <Card className="mt-8 dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <QuizContainer
-              quizzes={currentCourse.lessons[currentLessonIndex].video.quiz}
-              lessonId={currentCourse.lessons[currentLessonIndex].id}
+              quizzes={currentLesson.video.quiz}
+              lessonId={currentLesson.id}
               onQuizComplete={handleQuizComplete}
             />
           </Card>
@@ -257,7 +206,7 @@ export const CoursePlanPageComponent: React.FC<
         </Button>
         <Button
           onClick={handleNextLesson}
-          disabled={currentLessonIndex === currentCourse.lessons.length - 1}
+          disabled={currentLessonIndex === lessons.length - 1}
           className="dark:hover:bg-primary-dark px-6 py-3 transition-transform hover:scale-105 hover:shadow-md dark:bg-primary dark:text-white"
         >
           Next Lesson <ArrowRight className="ml-2 h-4 w-4" />
@@ -266,18 +215,3 @@ export const CoursePlanPageComponent: React.FC<
     </div>
   );
 };
-
-// TODO
-// Completed Course/Lessons logic almost completed. Need to:
-// 1. Format to save into cookies, completedQuizzes_[skillpath]_[courseid]_[lessonid].
-//     - (maybe use cookies, getLessonID, getCourseID, getSkillPathID? Im scared it will ruin some other code logic in other files),
-// 2. Change Progress in main skilklpath layout page thing and progress in course learning layout to reflect correct progress values.
-// 3. Create helper file to easily obtain users progress for the progress path later on!...
-// This should compelte
-//  - Progress Page
-// Last things to implement are:
-// - Certifications (easy, takes one day)
-// - Projects (easy, takes one day)
-// - User Profile (easy, takes one day) Shows user progress, certifications, projects, subscription, ButtonAccount.tsx
-// - Stripe payment and Student & Corporate Clients(Just show skeleton: "Coming soon") (easy, takes one day)
-// estimated time to complete: 4 days

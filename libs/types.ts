@@ -28,12 +28,11 @@ export interface Resource {
   id: number;
   resource_link: string;
   resource_type: "article" | "video" | "website";
-} 
+}
 
 export interface Lesson {
   id: number;
   title: string;
-  completed: boolean;
   video: Video;
   resources: Resource[];
 }
@@ -42,14 +41,13 @@ export interface Course {
   id: number;
   title: string;
   lessons: Lesson[];
-  progress: number;
   description?: string;
 }
 
 // -- Skill Paths --
 export interface SkillPath {
   id: number;
-  requiredSubscriptionLevel : "Free" | "Basic" | "Advanced";
+  requiredSubscriptionLevel: "Free" | "Basic" | "Advanced";
   title: string;
   description: string;
   difficulty_level: "Beginner" | "Intermediate" | "Advanced";
@@ -67,10 +65,10 @@ export interface User {
 }
 
 export interface CertificateProps {
-  certificationName: string
-  dateAcquired: string
-  issuer: string
-  recipientName: string
-  skills: string[]
-  hasProject: boolean
+  certificationName: string;
+  dateAcquired: string;
+  issuer: string;
+  recipientName: string;
+  skills: string[];
+  hasProject: boolean;
 }

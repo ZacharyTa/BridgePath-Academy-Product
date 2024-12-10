@@ -1,10 +1,7 @@
 import { useState, useRef } from "react";
 import ReactPlayer from "react-player/youtube";
-import {
-  getSkillPathId,
-  setCompletedVideos,
-  getCompletedVideos,
-} from "@/helper/useCookies";
+import { getSkillPathId } from "@/helper/useCookies";
+import { markVideoCompleted } from "@/helper/progressHelpers";
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -23,11 +20,8 @@ export default function VideoPlayer({
 
   const handleVideoEnd = () => {
     setIsCompleted(true);
-    // Save to completedVideos
-    const completedVideos = getCompletedVideos(skillPathId) || [];
-    if (!completedVideos.includes(lessonId)) {
-      setCompletedVideos(skillPathId, [...completedVideos, lessonId]);
-    }
+    // Mark the video as completed
+    markVideoCompleted(skillPathId, lessonId, lessonId);
 
     onVideoComplete();
     if (playerRef.current) {

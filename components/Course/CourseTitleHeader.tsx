@@ -18,6 +18,8 @@ export default function CourseTitleHeader({
 }: CourseTitleHeaderProps) {
   const router = useRouter();
 
+  console.log("CourseTitleHeaderProps", title, progress, details);
+
   const handleBackClick = () => {
     const skillPathId = getSkillPathId();
     if (skillPathId) {

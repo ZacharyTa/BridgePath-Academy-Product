@@ -19,6 +19,12 @@ import {
   getCompletedLessons,
 } from "@/helper/useCookies";
 
+import { getUserProgress } from "@/helper/progressStorage";
+import {
+  getSkillPathCompletionPercent,
+  getCourseCompletionPercent,
+} from "@/helper/progressHelpers";
+
 interface Course {
   id: number;
   title: string;
@@ -46,63 +52,43 @@ export default function SkillPathPage() {
 
   useEffect(() => {
     const skillPathId = getSkillPathId();
-
     if (skillPathId) {
-      const foundSkillPath = skillPaths.find((path) => path.id === skillPathId);
+      const sp = skillPaths.find((path) => path.id === skillPathId);
+      if (!sp) return router.push("/course-library");
 
-      if (foundSkillPath) {
-        const totalCourses = foundSkillPath.courses.length;
-        const estimatedTime = `${foundSkillPath.duration} hours`;
-        const skillLevel = foundSkillPath.difficulty_level;
-        const includesCertification = true;
-        const includesCapstone = true;
+      const userProgress = getUserProgress();
+      const overallProgress = getSkillPathCompletionPercent(
+        sp.id,
+        userProgress,
+      );
 
-        // Calculate overall progress based on saved completed lessons
-        const totalLessons = foundSkillPath.courses.reduce(
-          (acc, course) => acc + course.lessons.length,
-          0,
-        );
-
-        const completedLessonIds = getCompletedLessons(skillPathId) || [];
-        const totalCompletedLessons = completedLessonIds.length;
-
-        const overallProgress = (totalCompletedLessons / totalLessons) * 100;
-
-        setSkillPath({
-          title: foundSkillPath.title,
-          description: foundSkillPath.description,
-          totalCourses,
-          estimatedTime,
-          skillLevel,
-          includesCertification,
-          includesCapstone,
-          overallProgress,
-          courses: foundSkillPath.courses.map((course) => {
-            const courseCompletedLessons = course.lessons.filter((lesson) =>
-              completedLessonIds.includes(lesson.id),
-            );
-
-            const courseProgress =
-              (courseCompletedLessons.length / course.lessons.length) * 100;
-
-            return {
-              id: course.id,
-              title: course.title,
-              description: course.description || "",
-              duration: `${course.lessons.reduce(
-                (acc, lesson) =>
-                  acc + parseInt(lesson.video.url.split("=").pop() || "0", 10),
-                0,
-              )} hours`,
-              progress: courseProgress,
-              completed: courseProgress === 100,
-            };
-          }),
-        });
-      } else {
-        // Handle case when skillPathId is not set
-        router.push("/course-library");
-      }
+      setSkillPath({
+        title: sp.title,
+        description: sp.description,
+        totalCourses: sp.courses.length,
+        estimatedTime: `${sp.duration} hours`,
+        skillLevel: sp.difficulty_level,
+        includesCertification: true,
+        includesCapstone: true,
+        overallProgress,
+        courses: sp.courses.map((course) => {
+          const courseProgress = getCourseCompletionPercent(
+            sp.id,
+            course.id,
+            userProgress,
+          );
+          return {
+            id: course.id,
+            title: course.title,
+            description: course.description || "", // Ensure description is always included
+            duration: `3 hours`, // Hardcoded for now
+            progress: courseProgress,
+            completed: courseProgress === 100,
+          };
+        }),
+      });
+    } else {
+      router.push("/course-library");
     }
   }, []);
 

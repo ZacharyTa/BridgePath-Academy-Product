@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Quiz } from "@/libs/types";
 import {
-  setCompletedQuizzes,
-  getCompletedQuizzes,
   getSkillPathId,
+  getCompletedQuizzes,
+  getCourseId,
 } from "@/helper/useCookies";
+import { markQuizCompleted } from "@/helper/progressHelpers";
+import { getUserProgress } from "@/helper/progressStorage";
 
 interface QuizContainerProps {
   quizzes: Quiz[];
   lessonId: number;
-  onQuizComplete: () => void;
+  onQuizComplete: (quizId: number) => void;
 }
 
 const QuizContainer: React.FC<QuizContainerProps> = ({
@@ -28,7 +30,6 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
 
   const skillPathId = getSkillPathId() || 0;
-  const completedQuizzes = getCompletedQuizzes(skillPathId) || [];
 
   const currentQuiz = quizzes && quizzes[currentQuizIndex];
   const currentQuestion =
@@ -37,21 +38,23 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
   // Effect to handle quiz initialization or completion
   useEffect(() => {
     if (quizzes && quizzes.length > 0 && currentQuiz && currentQuestion) {
+      // Reset states for the new quiz
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setShowFeedback(false);
+      setIsQuizCompleted(false);
+
+      // Check if the quiz is already completed
+      const completedQuizzes =
+        getUserProgress().skillPaths[skillPathId]?.courses[getCourseId()]
+          ?.lessons[lessonId]?.quizzesCompleted || [];
       if (completedQuizzes.includes(currentQuiz.id)) {
-        // Quiz is already completed
-        setIsQuizCompleted(true);
-        // Display the correct answer
-        const correctOptionIndex = currentQuestion.options.findIndex(
+        const correctAnswerIndex = currentQuestion.options.findIndex(
           (option) => option.is_correct,
         );
-        setSelectedAnswer(correctOptionIndex);
+        setSelectedAnswer(correctAnswerIndex);
+        setIsQuizCompleted(true);
         setShowFeedback(true);
-      } else {
-        // Reset states for the new quiz
-        setCurrentQuestionIndex(0);
-        setSelectedAnswer(null);
-        setShowFeedback(false);
-        setIsQuizCompleted(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,18 +75,18 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
     if (selectedAnswer !== null) {
       setShowFeedback(true);
       if (currentQuestion.options[selectedAnswer].is_correct) {
-        // Save the completed quiz
-        if (!completedQuizzes.includes(currentQuiz.id)) {
-          setCompletedQuizzes(skillPathId, [
-            ...completedQuizzes,
-            currentQuiz.id,
-          ]);
-        }
+        // Mark the quiz as completed
+        markQuizCompleted(
+          skillPathId,
+          currentQuiz.id,
+          lessonId,
+          currentQuiz.id,
+        );
         setIsQuizCompleted(true);
 
         // Check if all quizzes are completed
         if (currentQuizIndex === quizzes.length - 1) {
-          onQuizComplete();
+          onQuizComplete(quizzes[currentQuizIndex].id);
         }
       }
     }
