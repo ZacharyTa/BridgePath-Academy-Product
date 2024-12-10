@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { setSubscription } from "@/helper/useCookies";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const tiers = [
   {
@@ -45,6 +46,16 @@ const tiers = [
 ];
 
 export default function SubscriptionPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callback = searchParams.get("callback");
+
+  const handleSetSubscription = (tierName: string) => {
+    setSubscription(tierName);
+    if (callback) {
+      router.push(callback as string); // Navigate to the callback URL
+    }
+  };
   return (
     <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -107,7 +118,7 @@ export default function SubscriptionPage() {
               </div>
               <Button
                 className={`mt-8 ${tier.highlighted ? "bg-primary text-white hover:bg-primary/90" : "text-white"}`}
-                onClick={() => setSubscription(tier.name)}
+                onClick={() => handleSetSubscription(tier.name)}
               >
                 {tier.button}
               </Button>
