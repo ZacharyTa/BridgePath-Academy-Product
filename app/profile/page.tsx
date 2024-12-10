@@ -19,16 +19,28 @@ const Profile = () => {
             <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
               <div className="mt-4">
                 <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-                  Danish Heilium
+                  Zachary Ta
                 </h3>
-                <p className="font-medium">Ui/Ux Designer</p>
+              </div>
+
+              <div className="divider mt-6.5"></div>
+
+              <div className="mt-6.5">
+                <h4 className="mb-3.5 font-medium text-black dark:text-white">
+                  Active Subscription
+                </h4>
               </div>
 
               <div className="mt-6.5">
                 <SubscriptionCard />
-                <div className="rounded-md border border-stroke p-4">
-                  <p>Placeholder for Current Subscription Plan</p>
-                </div>
+              </div>
+
+              <div className="divider mt-6.5"></div>
+
+              <div className="mt-6.5">
+                <h4 className="mb-3.5 font-medium text-black dark:text-white">
+                  Certifications
+                </h4>
               </div>
 
               <div className="mt-6.5">
@@ -45,18 +57,13 @@ const Profile = () => {
                   ]}
                   hasProject={true}
                 />
-                <div className="rounded-md border border-stroke p-4">
-                  <p>Placeholder for Certifications</p>
-                </div>
               </div>
+              <div className="divider mt-6.5"></div>
 
               <div className="mt-6.5">
                 <h4 className="mb-3.5 font-medium text-black dark:text-white">
                   Started Skillpaths
                 </h4>
-                <div className="rounded-md border border-stroke p-4">
-                  <p>Placeholder for Started Skillpaths</p>
-                </div>
               </div>
             </div>
           </div>
