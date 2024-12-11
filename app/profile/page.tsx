@@ -3,6 +3,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { AppProvider } from "@/context/AppContext";
 import SubscriptionCard from "@/components/Cards/SubscriptionCard";
 import { Certificate } from "@/components/Cards/CertificationCard";
+import { getCertificationStatus } from "@/helper/useCookies";
 
 export const metadata: Metadata = {
   title: "Next.js Profile | TailAdmin - Next.js Dashboard Template",
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 };
 
 const Profile = () => {
+  const skillPathId = 3;
+  const hasCertificate = getCertificationStatus(skillPathId);
+  console.log("BAHHHHH", hasCertificate);
   return (
     <AppProvider>
       <DefaultLayout>
@@ -22,7 +26,7 @@ const Profile = () => {
                   Zachary Ta
                 </h3>
               </div>
-
+              <p>{hasCertificate}</p>
               <div className="divider mt-6.5"></div>
 
               <div className="mt-6.5">
@@ -44,19 +48,22 @@ const Profile = () => {
               </div>
 
               <div className="mt-6.5">
-                <Certificate
-                  certificationName="Advanced Digital Marketing"
-                  dateAcquired="June 15, 2023"
-                  issuer="BridgePath Academy"
-                  recipientName="Jane Doe"
-                  skills={[
-                    "SEO",
-                    "Content Marketing",
-                    "Social Media Strategy",
-                    "Analytics",
-                  ]}
-                  hasProject={true}
-                />
+                {hasCertificate && (
+                  <Certificate
+                    certificationName="Advanced Digital Marketing"
+                    dateAcquired="June 15, 2023"
+                    issuer="BridgePath Academy"
+                    recipientName="Jane Doe"
+                    skills={[
+                      "SEO",
+                      "Content Marketing",
+                      "Social Media Strategy",
+                      "Analytics",
+                    ]}
+                    hasProject={true}
+                  />
+                )}
+                {!hasCertificate && <p>You have no certifications</p>}
               </div>
               <div className="divider mt-6.5"></div>
 

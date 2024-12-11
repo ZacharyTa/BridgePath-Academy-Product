@@ -281,7 +281,9 @@ export const CoursePlanPageComponent: React.FC<
                         return (
                           <div
                             key={task.id}
-                            className="rounded-box bg-white dark:bg-boxdark"
+                            className={`rounded-box p-4 dark:bg-boxdark ${
+                              isChecked ? "bg-success/25" : ""
+                            }`}
                           >
                             <div className="flex items-center">
                               <input
@@ -300,7 +302,7 @@ export const CoursePlanPageComponent: React.FC<
                               </div>
                             </div>
                             {expandedTaskId === task.id && (
-                              <div className="ml-6 mt-2 text-black dark:text-white">
+                              <div className="ml-6 mt-2 bg-warning/20 text-black dark:text-white">
                                 <p>{task.description}</p>
                               </div>
                             )}

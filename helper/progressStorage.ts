@@ -1,5 +1,6 @@
 // useCookies.ts
 import Cookies from "js-cookie";
+import eventEmitter from "@/app/utils/eventEmitter";
 
 export interface UserProgress {
   skillPaths: {
@@ -31,4 +32,5 @@ export function getUserProgress(): UserProgress {
 
 export function setUserProgress(progress: UserProgress) {
   Cookies.set("userProgress", JSON.stringify(progress));
+  eventEmitter.emit("userProgressUpdated", progress);
 }

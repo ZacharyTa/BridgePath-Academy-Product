@@ -9,8 +9,9 @@ import {
   getSkillPathId,
   getCourseId,
 } from "@/helper/useCookies";
-import { getUserProgress } from "@/helper/progressStorage";
+import { getUserProgress, UserProgress } from "@/helper/progressStorage";
 import { isLessonCompleted } from "@/helper/progressHelpers";
+import eventEmitter from "@/app/utils/eventEmitter";
 
 interface CourseOutlineProps {
   lessons: Lesson[];
@@ -29,12 +30,25 @@ export default function CourseOutline({
   const skillPathId = getSkillPathId() || 0;
   const courseId = getCourseId() || 0;
 
-  useEffect(() => {
-    const userProgress = getUserProgress();
+  const updateCompletedLessons = (userProgress: UserProgress) => {
     const completedStatus = lessons.map((lesson) =>
       isLessonCompleted(skillPathId, courseId, lesson.id, userProgress),
     );
     setCompletedLessons(completedStatus);
+  };
+
+  useEffect(() => {
+    const userProgress = getUserProgress();
+    updateCompletedLessons(userProgress);
+
+    const handleProgressUpdate = (progress: UserProgress) => {
+      updateCompletedLessons(progress);
+    };
+
+    eventEmitter.on("userProgressUpdated", handleProgressUpdate);
+    return () => {
+      eventEmitter.off("userProgressUpdated", handleProgressUpdate);
+    };
   }, [lessons, skillPathId, courseId]);
 
   const handleLessonClick = (index: number) => {

@@ -60,7 +60,15 @@ const SubscriptionCard = () => {
           </Button>
         </>
       ) : (
-        <p className="text-lg">You do not have an active subscription.</p>
+        <div>
+          <p className="text-lg">You do not have an active subscription.</p>
+          <Button
+            className="mr-4 text-white"
+            onClick={handleModifySubscription}
+          >
+            Modify Subscription
+          </Button>
+        </div>
       )}
     </div>
   );

@@ -33,7 +33,8 @@
     "app/utils/**/*",
     "utils/bubblyEffect.js",
     "app/types/**/*",
-    "app/helper/**/*"
+    "app/helper/**/*",
+    "app/utils/**/*"
   ],
   "exclude": ["node_modules"]
 }
