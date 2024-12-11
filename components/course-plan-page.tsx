@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
@@ -23,6 +23,8 @@ import {
   markQuizCompleted,
   getCourseCompletionPercent,
   isLessonCompleted,
+  markProjectTaskCompleted,
+  areAllProjectTasksCompleted,
 } from "@/helper/progressHelpers";
 
 interface CoursePlanPageComponentProps {
@@ -38,6 +40,10 @@ export const CoursePlanPageComponent: React.FC<
     currentLessonIndexParam,
   );
   const [courseProgress, setCourseProgress] = useState(0);
+  const [expandedTaskId, setExpandedTaskId] = useState<number | null>(null);
+  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
+  const [videoCompleted, setVideoCompleted] = useState(false);
+  const [projectTasksCompleted, setProjectTasksCompleted] = useState(false);
 
   const skillPathId = getSkillPathId() || 0;
   const courseId = getCourseId() || 0;
@@ -74,6 +80,26 @@ export const CoursePlanPageComponent: React.FC<
       lessons[currentLessonIndex].id,
       userProgress,
     );
+
+    // Update completed tasks
+    const lessonProgress =
+      userProgress.skillPaths[skillPathId]?.courses[courseId]?.lessons[
+        lessons[currentLessonIndex].id
+      ];
+    setCompletedTasks(lessonProgress?.projectTasksCompleted || []);
+
+    // Check if video is completed
+    setVideoCompleted(lessonProgress?.videoCompleted || false);
+
+    // Check if all project tasks are completed
+    setProjectTasksCompleted(
+      areAllProjectTasksCompleted(
+        skillPathId,
+        courseId,
+        lessons[currentLessonIndex].id,
+        userProgress,
+      ),
+    );
   }, [
     lessons,
     currentLessonIndexParam,
@@ -81,12 +107,14 @@ export const CoursePlanPageComponent: React.FC<
     skillPathId,
     courseId,
     currentLessonIndex,
+    expandedTaskId,
   ]);
 
   const handleVideoComplete = () => {
     const currentLessonId = lessons[currentLessonIndex].id;
     markVideoCompleted(skillPathId, courseId, currentLessonId);
     updateProgress();
+    setVideoCompleted(true);
   };
 
   const handleQuizComplete = (quizId: number) => {
@@ -126,6 +154,28 @@ export const CoursePlanPageComponent: React.FC<
     }
   };
 
+  const handleTaskToggle = (taskId: number) => {
+    setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
+  };
+
+  const handleTaskCheckboxChange = (taskId: number) => {
+    markProjectTaskCompleted(skillPathId, courseId, currentLesson.id, taskId);
+    updateProgress();
+    setCompletedTasks((prev) =>
+      prev.includes(taskId)
+        ? prev.filter((id) => id !== taskId)
+        : [...prev, taskId],
+    );
+    setProjectTasksCompleted(
+      areAllProjectTasksCompleted(
+        skillPathId,
+        courseId,
+        currentLesson.id,
+        getUserProgress(),
+      ),
+    );
+  };
+
   if (!lessons || lessons.length === 0) {
     return <div>Loading...</div>;
   }
@@ -145,18 +195,49 @@ export const CoursePlanPageComponent: React.FC<
           <Card className="dark:border-strokedark dark:bg-boxdark-2 dark:text-bodydark">
             <CardContent className="p-6">
               <Tabs defaultValue="video" className="w-full">
-                <TabsList className="dark:bg-boxdark dark:text-bodydark">
-                  <TabsTrigger value="video" className="dark:text-bodydark">
+                <TabsList className="gap-4 dark:bg-boxdark dark:text-bodydark">
+                  <TabsTrigger
+                    value="video"
+                    className={`rounded-md dark:text-bodydark ${
+                      videoCompleted ? "bg-success/50" : "bg-warning/50"
+                    }`}
+                  >
                     <span className="flex items-center">
-                      <ArrowRight className="mr-1 h-4 w-4" /> Video
+                      {videoCompleted ? (
+                        <CheckCircle className="mr-1 h-4 w-4 text-success" />
+                      ) : (
+                        <LoaderCircle className="mr-1 h-4 w-4 text-warning" />
+                      )}{" "}
+                      Video
                     </span>
                   </TabsTrigger>
-                  <TabsTrigger value="resources" className="dark:text-bodydark">
+                  <TabsTrigger
+                    value="projectTasks"
+                    className={`rounded-md dark:text-bodydark ${
+                      projectTasksCompleted ? "bg-success/50" : "bg-warning/50"
+                    }`}
+                  >
+                    <span className="flex items-center">
+                      {projectTasksCompleted ? (
+                        <CheckCircle className="mr-1 h-4 w-4 text-success" />
+                      ) : (
+                        <LoaderCircle className="mr-1 h-4 w-4 text-warning" />
+                      )}{" "}
+                      Project Tasks
+                    </span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="resources"
+                    className="rounded-md bg-slate-300 dark:text-bodydark"
+                  >
                     <span className="flex items-center">
                       <ArrowRight className="mr-1 h-4 w-4" /> Resources
                     </span>
                   </TabsTrigger>
-                  <TabsTrigger value="notes" className="dark:text-bodydark">
+                  <TabsTrigger
+                    value="notes"
+                    className="rounded-md bg-slate-300 dark:text-bodydark"
+                  >
                     <span className="flex items-center">
                       <ArrowRight className="mr-1 h-4 w-4" /> Notes
                     </span>
@@ -164,7 +245,7 @@ export const CoursePlanPageComponent: React.FC<
                 </TabsList>
                 <TabsContent
                   value="video"
-                  className="dark:bg-boxdark dark:text-bodydark"
+                  className="rounded-md dark:bg-boxdark dark:text-bodydark"
                 >
                   <VideoPlayer
                     videoUrl={currentLesson.video.url}
@@ -186,6 +267,50 @@ export const CoursePlanPageComponent: React.FC<
                     className="dark:bg-gray-800 h-40 w-full rounded border p-2 dark:text-white"
                     placeholder="Take notes here..."
                   ></textarea>
+                </TabsContent>
+                <TabsContent
+                  value="projectTasks"
+                  className="bg:white dark:bg-boxdark dark:text-bodydark"
+                >
+                  {currentLesson.projectTasks &&
+                  currentLesson.projectTasks.length > 0 ? (
+                    <div className="space-y-4">
+                      {currentLesson.projectTasks.map((task) => {
+                        const isChecked = completedTasks.includes(task.id);
+
+                        return (
+                          <div
+                            key={task.id}
+                            className="rounded-box bg-white dark:bg-boxdark"
+                          >
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isChecked}
+                                onChange={() =>
+                                  handleTaskCheckboxChange(task.id)
+                                }
+                              />
+                              <div
+                                className="ml-2 cursor-pointer text-xl font-medium"
+                                onClick={() => handleTaskToggle(task.id)}
+                              >
+                                {task.title}
+                              </div>
+                            </div>
+                            {expandedTaskId === task.id && (
+                              <div className="ml-6 mt-2 text-black dark:text-white">
+                                <p>{task.description}</p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p>No project tasks for this lesson.</p>
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>

@@ -28,6 +28,7 @@ export function markVideoCompleted(
     progress.skillPaths[skillPathId].courses[courseId].lessons[lessonId] = {
       videoCompleted: false,
       quizzesCompleted: [],
+      projectTasksCompleted: [],
       completed: false,
     };
   }
@@ -71,10 +72,58 @@ function ensureLesson(
     progress.skillPaths[skillPathId].courses[courseId].lessons[lessonId] = {
       videoCompleted: false,
       quizzesCompleted: [],
+      projectTasksCompleted: [],
       completed: false,
     };
   }
   return progress.skillPaths[skillPathId].courses[courseId].lessons[lessonId];
+}
+
+export function markProjectTaskCompleted(
+  skillPathId: number,
+  courseId: number,
+  lessonId: number,
+  taskId: number,
+) {
+  const progress = getUserProgress();
+  const lesson = ensureLesson(progress, skillPathId, courseId, lessonId);
+
+  // console.log(lesson.projectTasksCompleted?);
+
+  if (!lesson.projectTasksCompleted?.includes(taskId)) {
+    if (!lesson.projectTasksCompleted) {
+      lesson.projectTasksCompleted = [];
+    }
+    console.log("marking task as completed");
+    lesson.projectTasksCompleted.push(taskId);
+    setUserProgress(progress);
+  }
+}
+
+export function areAllProjectTasksCompleted(
+  skillPathId: number,
+  courseId: number,
+  lessonId: number,
+  userProgress: UserProgress,
+): boolean {
+  const sp = skillPaths.find((sp) => sp.id === skillPathId);
+  if (!sp) return true; // no tasks if no skillPath
+
+  const course = sp.courses.find((c) => c.id === courseId);
+  if (!course) return true; // no tasks if no course
+
+  const lesson = course.lessons.find((l) => l.id === lessonId);
+  if (!lesson || !lesson.projectTasks || lesson.projectTasks.length === 0)
+    return true;
+
+  const lessonProgress =
+    userProgress.skillPaths[skillPathId]?.courses[courseId]?.lessons[lessonId];
+
+  if (!lessonProgress) return false;
+
+  const allTaskIds = lesson.projectTasks.map((t) => t.id);
+  const completedTaskIds = lessonProgress.projectTasksCompleted || [];
+  return allTaskIds.every((id) => completedTaskIds.includes(id));
 }
 
 export function isLessonCompleted(
@@ -103,7 +152,16 @@ export function isLessonCompleted(
     completedQuizzes.includes(qId),
   );
 
-  return lessonProgress.videoCompleted && allQuizzesCompleted;
+  const allTasksCompleted = areAllProjectTasksCompleted(
+    skillPathId,
+    courseId,
+    lessonId,
+    userProgress,
+  );
+
+  return (
+    lessonProgress.videoCompleted && allQuizzesCompleted && allTasksCompleted
+  );
 }
 
 function isCourseCompleted(

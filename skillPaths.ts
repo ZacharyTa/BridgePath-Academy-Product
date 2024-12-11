@@ -190,6 +190,20 @@ const skillPaths: SkillPath[] = [
               ],
             },
             resources: [],
+            projectTasks: [
+              {
+                id: 1,
+                title: "Create a basic HTML file",
+                description:
+                  "Using your editor, create a file named index.html with a basic HTML structure.",
+              },
+              {
+                id: 2,
+                title: "Add a heading",
+                description:
+                  "Add an <h1> heading with the text 'Hello World' to your HTML file.",
+              },
+            ],
           },
           {
             id: 3,

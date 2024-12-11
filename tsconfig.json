@@ -32,7 +32,8 @@
     "app/components/app/view/**/*",
     "app/utils/**/*",
     "utils/bubblyEffect.js",
-    "app/types/**/*"
+    "app/types/**/*",
+    "app/helper/**/*"
   ],
   "exclude": ["node_modules"]
 }

@@ -30,11 +30,18 @@ export interface Resource {
   resource_type: "article" | "video" | "website";
 }
 
+export interface ProjectTask {
+  id: number;
+  title: string;
+  description: string;
+}
+
 export interface Lesson {
   id: number;
   title: string;
   video: Video;
   resources: Resource[];
+  projectTasks?: ProjectTask[]; // Add this line
 }
 
 export interface Course {

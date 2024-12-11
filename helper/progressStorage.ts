@@ -12,6 +12,7 @@ export interface UserProgress {
             [lessonId: number]: {
               videoCompleted: boolean;
               quizzesCompleted: number[];
+              projectTasksCompleted: number[];
               completed: boolean;
             };
           };

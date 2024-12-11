@@ -1,3 +1,5 @@
+"use client";
+import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -17,8 +19,11 @@ export function Certificate({
   skills,
   hasProject,
 }: CertificateProps) {
-  const skillPathId = getSkillPathId();
-  const certId = skillPathId ? getCertificationId(skillPathId) : null;
+  const skillPathId = 3; // for now hardcode
+  // const certId = skillPathId ? getCertificationId(skillPathId) : null;
+  const [certId, setCertId] = useState<string | null>(
+    getCertificationId(skillPathId),
+  );
 
   return (
     <Card className="mx-auto w-full max-w-3xl bg-white shadow-lg">
