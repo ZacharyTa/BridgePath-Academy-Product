@@ -46,7 +46,10 @@ const VerifyCertification: React.FC = () => {
         Verify
       </button>
       {verificationStatus && (
-        <p className="mt-4 text-lg">{verificationStatus}</p>
+        <div>
+          <p className="mt-4 text-lg">{verificationStatus}</p>
+          <p className="text-md mt-4">User: Zachary Ta</p>
+        </div>
       )}
     </div>
   );

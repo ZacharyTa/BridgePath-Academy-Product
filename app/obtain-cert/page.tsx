@@ -41,15 +41,10 @@ export default function ObtainCertPage() {
         <div className="w-2/5">
           <Certificate
             certificationName="Advanced Digital Marketing"
-            dateAcquired="June 15, 2023"
+            dateAcquired="June 15, 2024"
             issuer="BridgePath Academy"
-            recipientName="Jane Doe"
-            skills={[
-              "SEO",
-              "Content Marketing",
-              "Social Media Strategy",
-              "Analytics",
-            ]}
+            recipientName="Zachary Ta"
+            skills={["Zapier", "Automation"]}
             hasProject={true}
           />
           <div className="mt-4 flex w-full justify-between">

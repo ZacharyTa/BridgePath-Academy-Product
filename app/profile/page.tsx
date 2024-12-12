@@ -1,20 +1,15 @@
-import { Metadata } from "next";
+"use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { AppProvider } from "@/context/AppContext";
 import SubscriptionCard from "@/components/Cards/SubscriptionCard";
 import { Certificate } from "@/components/Cards/CertificationCard";
 import { getCertificationStatus } from "@/helper/useCookies";
-
-export const metadata: Metadata = {
-  title: "Next.js Profile | TailAdmin - Next.js Dashboard Template",
-  description:
-    "This is Next.js Profile page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
-};
+import Cookies from "js-cookie";
 
 const Profile = () => {
   const skillPathId = 3;
   const hasCertificate = getCertificationStatus(skillPathId);
-  console.log("BAHHHHH", hasCertificate);
+  // const test = Cookies.get("certificationStatus_3").toString();
   return (
     <AppProvider>
       <DefaultLayout>
@@ -26,7 +21,6 @@ const Profile = () => {
                   Zachary Ta
                 </h3>
               </div>
-              <p>{hasCertificate}</p>
               <div className="divider mt-6.5"></div>
 
               <div className="mt-6.5">
@@ -51,15 +45,10 @@ const Profile = () => {
                 {hasCertificate && (
                   <Certificate
                     certificationName="Advanced Digital Marketing"
-                    dateAcquired="June 15, 2023"
+                    dateAcquired="June 15, 2024"
                     issuer="BridgePath Academy"
-                    recipientName="Jane Doe"
-                    skills={[
-                      "SEO",
-                      "Content Marketing",
-                      "Social Media Strategy",
-                      "Analytics",
-                    ]}
+                    recipientName="Zachary Ta"
+                    skills={["Zapier", "Automation"]}
                     hasProject={true}
                   />
                 )}
@@ -69,8 +58,16 @@ const Profile = () => {
 
               <div className="mt-6.5">
                 <h4 className="mb-3.5 font-medium text-black dark:text-white">
-                  Started Skillpaths
+                  Projects
                 </h4>
+              </div>
+
+              <div className="mt-6.5">
+                <div className="rounded-sm border border-error border-stroke bg-error/25 p-4 text-error-content shadow-default dark:border-strokedark dark:bg-boxdark">
+                  <p className="text-lg font-medium text-black dark:text-white">
+                    Showcased projects coming soon
+                  </p>
+                </div>
               </div>
             </div>
           </div>

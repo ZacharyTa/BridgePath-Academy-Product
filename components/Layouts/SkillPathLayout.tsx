@@ -242,7 +242,7 @@ export default function SkillPathPage() {
                       (acc, course) =>
                         acc +
                         (course.completed ? 0 : parseInt(course.duration)),
-                      0,
+                      4,
                     )}{" "}
                     hours
                   </p>

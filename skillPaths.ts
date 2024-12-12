@@ -122,7 +122,7 @@ const skillPaths: SkillPath[] = [
     id: 3,
     requiredSubscriptionLevel: "Basic",
     title: "Introduction to Zapier",
-    description: "Master social media platforms for business growth.",
+    description: "Learn automation with social media platforms",
     difficulty_level: "Beginner",
     duration: 4,
     has_access: true,
@@ -130,7 +130,7 @@ const skillPaths: SkillPath[] = [
       {
         id: 3,
         title: "Zapier 101",
-        description: "Learn the basics of social media marketing",
+        description: "Learn the basics of Zapier",
         lessons: [
           {
             id: 1,
@@ -193,15 +193,27 @@ const skillPaths: SkillPath[] = [
             projectTasks: [
               {
                 id: 1,
-                title: "Create a basic HTML file",
+                title: "Signup",
                 description:
-                  "Using your editor, create a file named index.html with a basic HTML structure.",
+                  "Create an account at https://zapier.com/sign-up/.",
               },
               {
                 id: 2,
-                title: "Add a heading",
+                title: "Setup Zap",
                 description:
-                  "Add an <h1> heading with the text 'Hello World' to your HTML file.",
+                  "Go to the homepage and click on 'Create Zap' to set up your first Zap.",
+              },
+              {
+                id: 3,
+                title: "Set up Trigger",
+                description:
+                  "Choose an app and event that will trigger the Zap.",
+              },
+              {
+                id: 4,
+                title: "Set up Action",
+                description:
+                  "Choose an app and action that will be performed when the Zap is triggered.",
               },
             ],
           },

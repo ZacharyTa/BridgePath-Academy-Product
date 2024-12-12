@@ -19,6 +19,11 @@ const menuGroups = [
     menuItems: [
       {
         icon: <Book size={18} />,
+        label: "Dashboard",
+        route: "/dashboard",
+      },
+      {
+        icon: <Book size={18} />,
         label: "Course Library",
         route: "/course-library",
       },

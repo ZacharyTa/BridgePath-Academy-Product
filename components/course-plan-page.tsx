@@ -5,7 +5,13 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ArrowRight, CheckCircle, LoaderCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  LoaderCircle,
+  ChevronDown,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import CourseTitleHeader from "@/components/Course/CourseTitleHeader";
 import VideoPlayer from "@/components/Course/VideoPlayer";
@@ -295,10 +301,11 @@ export const CoursePlanPageComponent: React.FC<
                                 }
                               />
                               <div
-                                className="ml-2 cursor-pointer text-xl font-medium"
+                                className="ml-2 flex cursor-pointer flex-row items-center text-xl font-medium"
                                 onClick={() => handleTaskToggle(task.id)}
                               >
                                 {task.title}
+                                <ChevronDown className="ml-2 h-6 w-6" />
                               </div>
                             </div>
                             {expandedTaskId === task.id && (
