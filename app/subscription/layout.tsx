@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 export default function SubscriptionPageLayout({
   children,
@@ -6,9 +6,11 @@ export default function SubscriptionPageLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="subscription-page-layout">
-      {/* Add any shared UI elements here, such as a sidebar or header */}
-      {children}
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="subscription-page-layout">
+        {/* Add any shared UI elements here, such as a sidebar or header */}
+        {children}
+      </div>
+    </Suspense>
   );
 }
