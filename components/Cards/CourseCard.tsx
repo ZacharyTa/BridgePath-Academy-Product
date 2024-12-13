@@ -121,22 +121,18 @@ export default function CourseCard({
               {courseCount} Courses
             </span>
           </div>
-          <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
-            {includesCertificate && (
-              <>
-                <Award className="mr-3 h-7 w-7 text-primary dark:text-white" />
-                <span className="font-medium dark:text-white">Certificate</span>
-              </>
-            )}
-          </div>
-          <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
-            {includesProject && (
-              <>
-                <CheckSquare className="mr-3 h-7 w-7 text-primary dark:text-white" />
-                <span className="font-medium dark:text-white">Project</span>
-              </>
-            )}
-          </div>
+          {requiredSubscriptionLevel !== "Free" && includesCertificate && (
+            <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
+              <Award className="mr-3 h-7 w-7 text-primary dark:text-white" />
+              <span className="font-medium dark:text-white">Certificate</span>
+            </div>
+          )}
+          {requiredSubscriptionLevel !== "Free" && includesProject && (
+            <div className="flex items-center rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:from-blue-900 dark:to-purple-900">
+              <CheckSquare className="mr-3 h-7 w-7 text-primary dark:text-white" />
+              <span className="font-medium dark:text-white">Project</span>
+            </div>
+          )}
         </div>
         <div className="mb-6 flex items-start justify-between rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 p-4 dark:from-blue-800 dark:to-purple-800">
           <div className="flex items-start">

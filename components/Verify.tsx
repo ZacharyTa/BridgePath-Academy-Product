@@ -48,7 +48,9 @@ const VerifyCertification: React.FC = () => {
       {verificationStatus && (
         <div>
           <p className="mt-4 text-lg">{verificationStatus}</p>
-          <p className="text-md mt-4">User: Zachary Ta</p>
+          {verificationStatus === "Verified" && (
+            <p className="text-md mt-4">User: Zachary Ta</p>
+          )}
         </div>
       )}
     </div>

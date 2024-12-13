@@ -3,12 +3,15 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { AppProvider } from "@/context/AppContext";
 import SubscriptionCard from "@/components/Cards/SubscriptionCard";
 import { Certificate } from "@/components/Cards/CertificationCard";
-import { getCertificationStatus } from "@/helper/useCookies";
+import {
+  getCertificationId,
+  getCertificationStatus,
+} from "@/helper/useCookies";
 import Cookies from "js-cookie";
 
 const Profile = () => {
   const skillPathId = 3;
-  const hasCertificate = getCertificationStatus(skillPathId);
+  const hasCertificate = getCertificationId(skillPathId);
   // const test = Cookies.get("certificationStatus_3").toString();
   return (
     <AppProvider>

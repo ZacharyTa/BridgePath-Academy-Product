@@ -67,9 +67,6 @@ export function Certificate({
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm">
-          Verify at: bridgepath.academy/verify
-        </p>
         {hasProject && (
           <Badge variant="default" className="bg-green-500 hover:bg-green-600">
             Project Completed
